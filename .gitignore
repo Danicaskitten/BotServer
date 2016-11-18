@@ -240,3 +240,8 @@ ModelManifest.xml
 
 # FAKE - F# Make
 .fake/
+
+# Configuraion Files
+MovieBot/MovieBot/Web.config
+MovieBot/MovieBot/Web.Debug.config
+MovieBot/MovieBot/Web.Release.config
