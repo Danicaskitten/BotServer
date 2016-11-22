@@ -9,7 +9,7 @@ namespace MovieBot.ReplayManager
     {
         public static string getStartMessage()
         {
-
+            //commento
             return "ciao"
         }
     }
