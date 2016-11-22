@@ -6,7 +6,7 @@ using Microsoft.Bot.Connector;
 
 namespace MovieBot.Utility
 {
-    public static class MessageTestParser
+    public static class MessageTextParser
     {
         public static void startParsing(ConnectorClient connector, Activity activity)
         {
