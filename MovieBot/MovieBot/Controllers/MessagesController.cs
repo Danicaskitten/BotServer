@@ -8,6 +8,7 @@ using System.Web.Http.Description;
 using Microsoft.Bot.Connector;
 using Newtonsoft.Json;
 using MovieBot.ReplayManager;
+using MovieBot.Utility;
 
 namespace MovieBot
 {
@@ -24,11 +25,12 @@ namespace MovieBot
             if (activity.Type == ActivityTypes.Message)
             {
                 // calculate something for us to return
-                int length = (activity.Text ?? string.Empty).Length;
-    
+                //int length = (activity.Text ?? string.Empty).Length;
+
                 // return our reply to the user
-                Activity reply = activity.CreateReply($"You sent {activity.Text} which was {length} characters");
-                await connector.Conversations.ReplyToActivityAsync(reply);
+                //Activity reply = activity.CreateReply($"You sent {activity.Text} which was {length} characters");
+                //await connector.Conversations.ReplyToActivityAsync(reply);
+                await MessageTextParser.computeParsing(connector, activity);
             }
             else
             {

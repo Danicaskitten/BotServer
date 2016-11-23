@@ -125,12 +125,14 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ReplayManager\SearchMovieState1.cs" />
+    <Compile Include="ReplayManager\SearchMovie.cs" />
     <Compile Include="ReplayManager\StartMessage.cs" />
+    <Compile Include="States\SearchCinemaState.cs" />
     <Compile Include="Utility\MessageTextParser.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
+    <Content Include="ClassDiagram1.cd" />
     <None Include="Properties\PublishProfiles\MovieBot20161118025316 - Web Deploy.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace MovieBot.ReplayManager
+namespace MovieBot.States
 {
-    public class SearchMovieState1
+    public class SearchCinemaState
     {
+
     }
 }
