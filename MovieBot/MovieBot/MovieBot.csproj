@@ -129,6 +129,7 @@
     <Compile Include="ReplayManager\StartMessage.cs" />
     <Compile Include="States\SearchCinemaState.cs" />
     <Compile Include="Utility\MessageTextParser.cs" />
+    <Compile Include="Utility\StateReply.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
