@@ -19,22 +19,17 @@ namespace MovieBot.Utility
 
             string input = activity.Text.ToLower();
             string sPattern = "(search movie|searchmovie)";
-            string reply_text = String.Empty;
+            Activity reply = new Activity();
+
             if (System.Text.RegularExpressions.Regex.IsMatch(input, sPattern, System.Text.RegularExpressions.RegexOptions.IgnoreCase))
             {
                 string pattern = "(search movie |/searchmovie)";
                 string replacement = string.Empty;
                 Regex rgx = new Regex(pattern);
                 string result = rgx.Replace(input, replacement);
-                reply_text = SearchMovie.getResponse(result);
+                reply = await SearchMovie.getResponse(activity, result);
             }
 
-            if (String.IsNullOrEmpty(reply_text))
-            {
-                reply_text = "empty message";
-            }
-
-            Activity reply = activity.CreateReply(reply_text);
             APIResponse response = await connector.Conversations.ReplyToActivityAsync(reply);
             return response;
         }
