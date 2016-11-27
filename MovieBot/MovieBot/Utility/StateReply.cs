@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Bot.Connector;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -9,11 +10,20 @@ namespace MovieBot.Utility
     {
         private bool _finalState;
         private string _replayMessage;
+        private string _special;
+        private HeroCard _heroCard;
 
         public StateReply(bool isFinalState, string replayMessage)
         {
             _finalState = isFinalState;
             _replayMessage = replayMessage;
+        }
+
+        public StateReply(bool isFinalState, string replayMessage, string special)
+        {
+            _finalState = isFinalState;
+            _replayMessage = replayMessage;
+            _special = special;
         }
 
         public string GetReplayMessage
@@ -23,6 +33,15 @@ namespace MovieBot.Utility
         public bool IsFinalState
         {
             get { return _finalState; }
+        }
+        public HeroCard HeroCard
+        {
+            get { return _heroCard; }
+            set { _heroCard = value; }
+        }
+        public string GetSpecial
+        {
+            get { return _special; }
         }
     }
 }

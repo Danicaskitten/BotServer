@@ -10,6 +10,10 @@ namespace MovieBot.Contract
     {
         public string Title { get; set; }
         public string ImdbDb { get; set; }
+        public object Poster { get; set; }
+        public object Runtime { get; set; }
+        public object Plot { get; set; }
+        public object Genre { get; set; }
     }
 
     public class Cinema
@@ -38,5 +42,14 @@ namespace MovieBot.Contract
         public Cinema Cinema { get; set; }
         public List<Projection> Projections { get; set; }
         public string ImdbId { get; set; }
+    }
+    public class CinemaFromMovieOutputModelList
+    {
+        public List<CinemaFromMovieOutputModel> Data { get; set; }
+    }
+
+    public class MovieList
+    {
+        public List<Movie> Data { get; set; }
     }
 }

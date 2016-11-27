@@ -19,7 +19,7 @@ namespace MovieBot.Utility
 
             string input = activity.Text.ToLower();
             string sPattern = "(search movie|searchmovie)";
-            Activity reply = new Activity();
+            Activity reply = activity.CreateReply("Sorry, I am only an alpha prototype. So I reply only to the command \"search movie Title\"");
 
             if (System.Text.RegularExpressions.Regex.IsMatch(input, sPattern, System.Text.RegularExpressions.RegexOptions.IgnoreCase))
             {
@@ -28,6 +28,14 @@ namespace MovieBot.Utility
                 Regex rgx = new Regex(pattern);
                 string result = rgx.Replace(input, replacement);
                 reply = await SearchMovie.getResponse(activity, result);
+            }
+            else
+            {
+                Activity stateReply = await MessageStateParser.computeStateParsing(activity);
+                if(!(stateReply == null))
+                {
+                    reply = stateReply;
+                }
             }
 
             APIResponse response = await connector.Conversations.ReplyToActivityAsync(reply);

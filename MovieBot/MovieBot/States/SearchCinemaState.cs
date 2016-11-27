@@ -1,4 +1,5 @@
-﻿using MovieBot.Contract;
+﻿using Microsoft.Bot.Connector;
+using MovieBot.Contract;
 using MovieBot.Utility;
 using System;
 using System.Collections.Generic;
@@ -13,33 +14,10 @@ namespace MovieBot.States
 {
     public class SearchCinemaState
     {
-        private string _channelType;
-        private string _userID;
-        private Movie _choosenMovie;
-        private string _choosenCinema;
-
-        public Movie TitleProperty
-        {
-            set { _choosenMovie = value; }
-        }
-        public string CinemaProperty
-        {
-            set { _choosenCinema = value; }
-        }
-        public string UserIDProperty
-        {
-            get { return _userID; }
-        }
-        public string ChannelTypeProperty
-        {
-            get { return _userID; }
-        }
-
-        public SearchCinemaState(string channelType, string userID)
-        {
-            _channelType = channelType;
-            _userID = userID;
-        }
+        public string ChannelType { get; set; }
+        public string UserID { get; set; }
+        public Movie ChoosenMovie { get; set; }
+        public bool ChoosenCinema { get; set; }
 
         public StateReply getReplay(string userInput)
         {
@@ -49,9 +27,9 @@ namespace MovieBot.States
                 StateReply replay = new StateReply(false, replayMessage);
                 return replay;
             }
-            if (_choosenMovie == null)
+            if (ChoosenMovie == null)
             {
-                string request = "Search/Movie?title=" + userInput;
+                string request = "v1/Search/Movie?title=" + userInput;
                 string urlRequest = ConnectionUtility.CreateGetRequest(request);
                 WebResponse response = ConnectionUtility.MakeRequest(urlRequest);
                 Stream responseStream = response.GetResponseStream();
@@ -59,16 +37,16 @@ namespace MovieBot.States
                 string jsonString = reader.ReadToEnd();
                 Console.WriteLine(jsonString);
                 JavaScriptSerializer json_serializer = new JavaScriptSerializer();
-                Movie[] movieArray = Newtonsoft.Json.JsonConvert.DeserializeObject<Movie[]>(jsonString);
-                Movie selected_movie = movieArray[0];
-                _choosenMovie = selected_movie;
-                string replayMessage = "Yai ! I've find that " + _choosenMovie.Title + " is now in the cinemas. Write me your city  and I will provide you all the near projections ";
+                MovieList movieArray = Newtonsoft.Json.JsonConvert.DeserializeObject<MovieList>(jsonString);
+                Movie selected_movie = movieArray.Data.First();
+                ChoosenMovie = selected_movie;
+                string replayMessage = "Yai ! I've found that " + ChoosenMovie.Title + " is now in the cinemas. Write me your city  and I will provide you all the near projections ";
                 StateReply replay = new StateReply(false, replayMessage);
                 return replay;
             }
-            if(_choosenCinema == null)
+            if(!ChoosenCinema)
             {
-                string request = "Search/CinemaFromMovie?imdbid=" + _choosenMovie.ImdbDb;
+                string request = "v1/Search/CinemaFromMovie?imdbid=" + ChoosenMovie.ImdbDb;
                 string urlRequest = ConnectionUtility.CreateGetRequest(request);
                 WebResponse response = ConnectionUtility.MakeRequest(urlRequest);
                 Stream responseStream = response.GetResponseStream();
@@ -76,11 +54,44 @@ namespace MovieBot.States
                 string jsonString = reader.ReadToEnd();
                 Console.WriteLine(jsonString);
                 JavaScriptSerializer json_serializer = new JavaScriptSerializer();
-                CinemaFromMovieOutputModel[] cinemaFromMovieOutputModelArray = Newtonsoft.Json.JsonConvert.DeserializeObject<CinemaFromMovieOutputModel[]>(jsonString);
-                CinemaFromMovieOutputModel fisrtOnly = cinemaFromMovieOutputModelArray[0];
-                //https://blogs.msdn.microsoft.com/tsmatsuz/2016/08/31/microsoft-bot-framework-messages-howto-image-html-card-button-etc/
-                string replayMessage = "Yai ! I've find that " + _choosenMovie.Title + " is now in the cinemas. Write me your city  and I will provide you all the near projections ";
-                StateReply replay = new StateReply(false, replayMessage);
+                CinemaFromMovieOutputModelList cinemaFromMovieOutputModelArray = Newtonsoft.Json.JsonConvert.DeserializeObject<CinemaFromMovieOutputModelList>(jsonString);
+                CinemaFromMovieOutputModel fisrtOnly = cinemaFromMovieOutputModelArray.Data.First();
+
+                string replayMessage = "These are all the projections that I've found. Please click only one choice";
+                StateReply replay = new StateReply(false, replayMessage,"herocard");
+                string heroCardTitle = "These are the projections of " + ChoosenMovie.Title + " that are available in Cinema " + fisrtOnly.Cinema.Name;
+
+                List<CardAction> cardButtons = new List<CardAction>();
+
+                foreach (Projection proj in fisrtOnly.Projections)
+                {
+                    string title = "Time Slot: " + proj.Time;
+                    string value = "Title=" + ChoosenMovie.Title + ";Cinema=" + fisrtOnly.Cinema.Name + ";Date=" + proj.Date + ";Time=" + proj.Time;
+                    CardAction plButton = new CardAction()
+                    {
+                        Value = value,
+                        Type = "imBack",
+                        Title = title
+                    };
+                    cardButtons.Add(plButton);
+                }
+
+                HeroCard plCard = new HeroCard()
+                {
+                    Title = heroCardTitle,
+                    Subtitle = "Please choose you preferite one",
+                    Buttons = cardButtons
+                };
+
+                replay.HeroCard = plCard;
+                ChoosenCinema = true;
+
+                return replay;
+            }
+            if (ChoosenCinema)
+            {
+                string replayMessage = "Your reservation has successfully been completed. Enjoy your Film !!";
+                StateReply replay = new StateReply(true, replayMessage);
                 return replay;
             }
             return null;
