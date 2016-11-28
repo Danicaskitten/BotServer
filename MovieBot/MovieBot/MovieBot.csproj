@@ -139,6 +139,7 @@
     <Content Include="packages.config" />
     <Content Include="ClassDiagram1.cd" />
     <None Include="Properties\PublishProfiles\MovieBot20161118025316 - Web Deploy.pubxml" />
+    <None Include="Properties\PublishProfiles\MovieBot20161127052109 - Web Deploy.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

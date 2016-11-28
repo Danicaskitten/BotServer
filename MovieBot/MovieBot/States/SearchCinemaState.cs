@@ -90,7 +90,7 @@ namespace MovieBot.States
             }
             if (ChoosenCinema)
             {
-                string replayMessage = "Your reservation has successfully been completed. Enjoy your Film !!";
+                string replayMessage = "Your reservation has successfully been completed. Enjoy your Movie !!";
                 StateReply replay = new StateReply(true, replayMessage);
                 return replay;
             }
