@@ -59,7 +59,7 @@ namespace MovieBot.States
 
                 string replayMessage = "These are all the projections that I've found. Please click only one choice";
                 StateReply replay = new StateReply(false, replayMessage,"herocard");
-                string heroCardTitle = "These are the projections of " + ChoosenMovie.Title + " that are available in Cinema " + fisrtOnly.Cinema.Name;
+                string heroCardTitle = "These are the projections available in Cinema " + fisrtOnly.Cinema.Name;
 
                 List<CardAction> cardButtons = new List<CardAction>();
 
