@@ -7,6 +7,7 @@ namespace MovieBot.ReplyManagers
 {
     public enum ManagerEnum
     {
-        SearchMovie
+        SearchMovie,
+        SearchCinema
     }
 }

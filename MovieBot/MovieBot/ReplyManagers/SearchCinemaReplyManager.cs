@@ -9,9 +9,9 @@ using System.Web;
 
 namespace MovieBot.ReplyManagers
 {
-    public class SearchMovieReplyManager : ReplyManager
+    public class SearchCinemaReplyManager : ReplyManager
     {
-        public SearchMovieReplyManager(Activity activity, string input) : base(activity, input){}
+        public SearchCinemaReplyManager(Activity activity, string input) : base(activity, input){ }
 
         public override async Task<Activity> getResponse()
         {
@@ -21,15 +21,15 @@ namespace MovieBot.ReplyManagers
                 UserID = activity.From.Id,
                 ChoosenCinema = false
             };
-            
-            StateReply stateReplay= state.getReplay(input);
+
+            StateReply stateReplay = state.getReplay(input);
             StateClient stateClient = activity.GetStateClient();
             if (!(stateReplay.IsFinalState))
             {
                 BotData userData = await stateClient.BotState.GetUserDataAsync(activity.ChannelId, activity.From.Id);
                 userData.SetProperty<bool>("searchMovie", true);
                 //await stateClient.BotState.SetUserDataAsync(activity.ChannelId, activity.From.Id, userData);
-                
+
                 userData.SetProperty<SearchMovieState>("SearchState", state);
                 BotData response = await stateClient.BotState.SetUserDataAsync(activity.ChannelId, activity.From.Id, userData);
             }

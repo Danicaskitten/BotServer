@@ -11,7 +11,7 @@ namespace MovieBot.Utility
 {
     public class MessageStateParser
     {
-        private SearchCinemaState state;
+        private SearchMovieState state;
         private Activity activity;
         private ConnectorClient connector;
         private ReplyManager replyManager;
@@ -36,7 +36,7 @@ namespace MovieBot.Utility
             {
                 BotState botState = new BotState(stateClient);
                 BotData botData = await botState.GetUserDataAsync(activity.ChannelId, activity.From.Id);
-                state = botData.GetProperty<SearchCinemaState>("SearchState");
+                state = botData.GetProperty<SearchMovieState>("SearchState");
                 this.replyManager = ReplyManagerFactory.genererateReplyManager(activity, input, ManagerEnum.SearchMovie);
                 return true;
             }

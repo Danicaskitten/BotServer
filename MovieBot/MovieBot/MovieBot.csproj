@@ -130,9 +130,12 @@
     <Compile Include="ReplyManagers\ManagerEnum.cs" />
     <Compile Include="ReplyManagers\ReplyManager.cs" />
     <Compile Include="ReplyManagers\ReplyManagerFactory.cs" />
+    <Compile Include="ReplyManagers\SearchCinemaReplyManager.cs" />
     <Compile Include="ReplyManagers\SearchMovieReplyManager.cs" />
     <Compile Include="ReplyManagers\StartMessage.cs" />
     <Compile Include="States\SearchCinemaState.cs" />
+    <Compile Include="States\SearchMovieState.cs" />
+    <Compile Include="States\SearchStateInterface.cs" />
     <Compile Include="Utility\ConnectionUtility.cs" />
     <Compile Include="Utility\MessageStateParser.cs" />
     <Compile Include="Utility\MessageTextParser.cs" />
