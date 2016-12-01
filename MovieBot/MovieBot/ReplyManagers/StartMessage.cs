@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Web;
 
-namespace MovieBot.ReplayManager
+namespace MovieBot.ReplyManagers
 {
     public static class StartMessage
     {

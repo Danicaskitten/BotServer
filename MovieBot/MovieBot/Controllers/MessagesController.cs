@@ -7,7 +7,7 @@ using System.Web.Http;
 using System.Web.Http.Description;
 using Microsoft.Bot.Connector;
 using Newtonsoft.Json;
-using MovieBot.ReplayManager;
+using MovieBot.ReplyManagers;
 using MovieBot.Utility;
 
 namespace MovieBot
@@ -30,7 +30,22 @@ namespace MovieBot
                 // return our reply to the user
                 //Activity reply = activity.CreateReply($"You sent {activity.Text} which was {length} characters");
                 //await connector.Conversations.ReplyToActivityAsync(reply);
-                await MessageTextParser.computeParsing(connector, activity);
+                Parser parser = new MessageTextParser(activity, connector);
+                MessageStateParser stateParser = new MessageStateParser(activity, connector);
+                Activity reply;
+                if (await stateParser.haveAnswer(activity.Text.ToLower()))
+                {
+                    reply = await stateParser.computeParsing();
+                }
+                else if (parser.haveAnswer(activity.Text.ToLower()))
+                {
+                    reply = await parser.computeParsing();
+                }
+                else
+                {
+                    reply = activity.CreateReply("Sorry, due to internal error, I can't manage your request");
+                } 
+                APIResponse result = await connector.Conversations.ReplyToActivityAsync(reply);
             }
             else
             {

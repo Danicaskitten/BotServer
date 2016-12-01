@@ -7,11 +7,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 
-namespace MovieBot.ReplayManager
+namespace MovieBot.ReplyManagers
 {
-    public static class SearchMovie
+    public class SearchMovieReplyManager : ReplyManager
     {
-        public static async Task<Activity> getResponse(Activity activity, string input)
+        public SearchMovieReplyManager(Activity activity, string input) : base(activity, input){}
+
+        public override async Task<Activity> getResponse()
         {
             SearchCinemaState state = new SearchCinemaState
             {
@@ -40,7 +42,7 @@ namespace MovieBot.ReplayManager
             return replyToConversation;
         }
 
-        public static async Task<Activity> getResponseWithState(Activity activity, string input, SearchCinemaState state)
+        public override async Task<Activity> getResponseWithState(SearchCinemaState state)
         {
             StateReply stateReplay = state.getReplay(input);
             StateClient stateClient = activity.GetStateClient();
