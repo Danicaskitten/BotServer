@@ -8,6 +8,7 @@ namespace MovieBot.ReplyManagers
     public enum ManagerEnum
     {
         SearchMovie,
-        SearchCinema
+        SearchCinema,
+        Default
     }
 }
