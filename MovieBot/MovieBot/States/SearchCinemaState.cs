@@ -12,14 +12,14 @@ using System.Web.Script.Serialization;
 
 namespace MovieBot.States
 {
-    public class SearchCinemaState : SearchStateInterface
+    public class SearchCinemaState : SearchState
     {
         public string ChannelType { get; set; }
         public string UserID { get; set; }
         public Movie ChoosenMovie { get; set; }
         public bool RequestedCinema { get; set; }
         public Projection ChoosenProjection { get; set; }
-        public StateReply getReplay(string userInput)
+        public override StateReply getReplay(string userInput)
         {
 
             if (string.IsNullOrEmpty(userInput))

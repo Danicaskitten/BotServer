@@ -42,7 +42,7 @@ namespace MovieBot.ReplyManagers
             return replyToConversation;
         }
 
-        public override async Task<Activity> getResponseWithState(SearchMovieState state)
+        public override async Task<Activity> getResponseWithState(SearchState state)
         {
             StateReply stateReplay = state.getReplay(input);
             StateClient stateClient = activity.GetStateClient();
@@ -52,7 +52,7 @@ namespace MovieBot.ReplyManagers
                 userData.SetProperty<bool>("searchMovie", true);
                 //await stateClient.BotState.SetUserDataAsync(activity.ChannelId, activity.From.Id, userData);
 
-                userData.SetProperty<SearchMovieState>("SearchState", state);
+                userData.SetProperty<SearchState>("SearchState", state);
                 BotData response = await stateClient.BotState.SetUserDataAsync(activity.ChannelId, activity.From.Id, userData);
             }
             else

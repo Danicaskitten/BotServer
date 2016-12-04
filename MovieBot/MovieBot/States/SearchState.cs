@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace MovieBot.States
 {
-    interface SearchStateInterface
+    public abstract class SearchState
     {
-       StateReply getReplay(string userInput)
+        public abstract StateReply getReplay(string userInput);
     }
 }

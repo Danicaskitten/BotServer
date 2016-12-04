@@ -12,13 +12,13 @@ using System.Web.Script.Serialization;
 
 namespace MovieBot.States
 {
-    public class SearchMovieState : SearchStateInterface
+    public class SearchMovieState : SearchState
     {
         public string ChannelType { get; set; }
         public string UserID { get; set; }
         public Movie ChoosenMovie { get; set; }
         public bool ChoosenCinema { get; set; }
-        public StateReply getReplay(string userInput)
+        public override StateReply getReplay(string userInput)
         {
             if(string.IsNullOrEmpty(userInput))
             {
@@ -51,7 +51,6 @@ namespace MovieBot.States
                 Stream responseStream = response.GetResponseStream();
                 StreamReader reader = new StreamReader(responseStream, Encoding.UTF8);
                 string jsonString = reader.ReadToEnd();
-                Console.WriteLine(jsonString);
                 JavaScriptSerializer json_serializer = new JavaScriptSerializer();
                 CinemaFromMovieOutputModelList cinemaFromMovieOutputModelArray = Newtonsoft.Json.JsonConvert.DeserializeObject<CinemaFromMovieOutputModelList>(jsonString);
                 CinemaFromMovieOutputModel fisrtOnly = cinemaFromMovieOutputModelArray.Data.First();

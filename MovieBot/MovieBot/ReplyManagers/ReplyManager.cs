@@ -20,7 +20,6 @@ namespace MovieBot.ReplyManagers
         }
 
         public abstract Task<Activity> getResponse();
-        public abstract Task<Activity> getResponseWithState(SearchMovieState state);
-
+        public abstract Task<Activity> getResponseWithState<T>(T state);
     }
 }

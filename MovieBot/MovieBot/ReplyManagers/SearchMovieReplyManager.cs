@@ -3,7 +3,6 @@ using MovieBot.States;
 using MovieBot.Utility;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 
@@ -27,10 +26,10 @@ namespace MovieBot.ReplyManagers
             if (!(stateReplay.IsFinalState))
             {
                 BotData userData = await stateClient.BotState.GetUserDataAsync(activity.ChannelId, activity.From.Id);
-                userData.SetProperty<bool>("searchMovie", true);
+                userData.SetProperty<bool>("SearchMovie", true);
                 //await stateClient.BotState.SetUserDataAsync(activity.ChannelId, activity.From.Id, userData);
                 
-                userData.SetProperty<SearchMovieState>("SearchState", state);
+                userData.SetProperty<SearchMovieState>("SearchMovieState", state);
                 BotData response = await stateClient.BotState.SetUserDataAsync(activity.ChannelId, activity.From.Id, userData);
             }
             else
@@ -42,17 +41,17 @@ namespace MovieBot.ReplyManagers
             return replyToConversation;
         }
 
-        public override async Task<Activity> getResponseWithState(SearchMovieState state)
+        public override async Task<Activity> getResponseWithState(SearchState state)
         {
             StateReply stateReplay = state.getReplay(input);
             StateClient stateClient = activity.GetStateClient();
             if (!(stateReplay.IsFinalState))
             {
                 BotData userData = await stateClient.BotState.GetUserDataAsync(activity.ChannelId, activity.From.Id);
-                userData.SetProperty<bool>("searchMovie", true);
+                userData.SetProperty<bool>("SearchMovie", true);
                 //await stateClient.BotState.SetUserDataAsync(activity.ChannelId, activity.From.Id, userData);
 
-                userData.SetProperty<SearchMovieState>("SearchState", state);
+                userData.SetProperty<SearchState>("SearchMovieState", state);
                 BotData response = await stateClient.BotState.SetUserDataAsync(activity.ChannelId, activity.From.Id, userData);
             }
             else

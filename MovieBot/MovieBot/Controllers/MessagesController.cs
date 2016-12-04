@@ -24,12 +24,6 @@ namespace MovieBot
             ConnectorClient connector = new ConnectorClient(new Uri(activity.ServiceUrl));
             if (activity.Type == ActivityTypes.Message)
             {
-                // calculate something for us to return
-                //int length = (activity.Text ?? string.Empty).Length;
-
-                // return our reply to the user
-                //Activity reply = activity.CreateReply($"You sent {activity.Text} which was {length} characters");
-                //await connector.Conversations.ReplyToActivityAsync(reply);
                 Parser parser = new MessageTextParser(activity, connector);
                 MessageStateParser stateParser = new MessageStateParser(activity, connector);
                 Activity reply;
@@ -56,6 +50,11 @@ namespace MovieBot
             return response;
         }
 
+        /// <summary>
+        /// This method is used to handle all those non message activities that the bot can recieve.
+        /// </summary>
+        /// <param name="activity"></param>
+        /// <returns></returns>
         private Activity HandleSystemMessage(Activity activity)
         {
             Activity reply = new Activity();
