@@ -115,6 +115,7 @@
     <Content Include="default.htm" />
     <Content Include="Global.asax" />
     <Content Include="StandardReplies\start_message.txt" />
+    <Content Include="Utility\parser_dictionary.txt" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -127,13 +128,21 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ReplayManager\SearchMovie.cs" />
-    <Compile Include="ReplayManager\StartMessage.cs" />
+    <Compile Include="ReplyManagers\ManagerEnum.cs" />
+    <Compile Include="ReplyManagers\ReplyManager.cs" />
+    <Compile Include="ReplyManagers\ReplyManagerFactory.cs" />
+    <Compile Include="ReplyManagers\SearchCinemaReplyManager.cs" />
+    <Compile Include="ReplyManagers\SearchMovieReplyManager.cs" />
+    <Compile Include="ReplyManagers\StartMessage.cs" />
     <Compile Include="States\SearchCinemaState.cs" />
+    <Compile Include="States\SearchMovieState.cs" />
+    <Compile Include="States\SearchState.cs" />
     <Compile Include="Utility\ConnectionUtility.cs" />
     <Compile Include="Utility\MessageStateParser.cs" />
     <Compile Include="Utility\MessageTextParser.cs" />
+    <Compile Include="Utility\Parser.cs" />
     <Compile Include="Utility\StateReply.cs" />
+    <Compile Include="Utility\StringToEnum.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

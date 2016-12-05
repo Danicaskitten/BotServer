@@ -7,7 +7,7 @@ using System.Web.Http;
 using System.Web.Http.Description;
 using Microsoft.Bot.Connector;
 using Newtonsoft.Json;
-using MovieBot.ReplayManager;
+using MovieBot.ReplyManagers;
 using MovieBot.Utility;
 
 namespace MovieBot
@@ -24,13 +24,22 @@ namespace MovieBot
             ConnectorClient connector = new ConnectorClient(new Uri(activity.ServiceUrl));
             if (activity.Type == ActivityTypes.Message)
             {
-                // calculate something for us to return
-                //int length = (activity.Text ?? string.Empty).Length;
-
-                // return our reply to the user
-                //Activity reply = activity.CreateReply($"You sent {activity.Text} which was {length} characters");
-                //await connector.Conversations.ReplyToActivityAsync(reply);
-                await MessageTextParser.computeParsing(connector, activity);
+                Parser parser = new MessageTextParser(activity, connector);
+                MessageStateParser stateParser = new MessageStateParser(activity, connector);
+                Activity reply;
+                if (parser.haveAnswer(activity.Text.ToLower()))
+                {
+                    reply = await parser.computeParsing();
+                }
+                else if (await stateParser.haveAnswer(activity.Text.ToLower()))
+                {
+                    reply = stateParser.computeParsing();
+                }
+                else
+                {
+                    reply = activity.CreateReply("Sorry, I don't understand your request, please write me Help in order to my functionalities");
+                } 
+                APIResponse result = await connector.Conversations.ReplyToActivityAsync(reply);
             }
             else
             {
@@ -41,6 +50,11 @@ namespace MovieBot
             return response;
         }
 
+        /// <summary>
+        /// This method is used to handle all those non message activities that the bot can recieve.
+        /// </summary>
+        /// <param name="activity"></param>
+        /// <returns></returns>
         private Activity HandleSystemMessage(Activity activity)
         {
             Activity reply = new Activity();
