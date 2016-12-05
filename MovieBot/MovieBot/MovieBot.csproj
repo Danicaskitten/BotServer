@@ -122,7 +122,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Contract\Bing\BingContract.cs" />
     <Compile Include="Contract\Contract.cs" />
+    <Compile Include="Contract\Location.cs" />
     <Compile Include="Controllers\MessagesController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -137,6 +139,7 @@
     <Compile Include="States\SearchCinemaState.cs" />
     <Compile Include="States\SearchMovieState.cs" />
     <Compile Include="States\SearchState.cs" />
+    <Compile Include="Utility\BingMapsUtility.cs" />
     <Compile Include="Utility\ConnectionUtility.cs" />
     <Compile Include="Utility\MessageStateParser.cs" />
     <Compile Include="Utility\MessageTextParser.cs" />
