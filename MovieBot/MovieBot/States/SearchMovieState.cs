@@ -19,9 +19,10 @@ namespace MovieBot.States
         public Movie ChoosenMovie { get; set; }
         public bool ChoosenCinema { get; set; }
         public bool LocationRequested { get; set; }
-        public Location locationFound { get; set; }
+        public Point locationFound { get; set; }
         public DateTime timeChoosen { get; set; }
         public int StateNum { get; set; }
+        public List<Location> locationList { get; set; }
 
         public override StateReply getReplay(string userInput)
         {
@@ -31,38 +32,86 @@ namespace MovieBot.States
                     StateReply reply = stateZero(userInput);
                     return reply;
                 case 1:
+                    StateReply reply1 = stateOne(userInput);
+                    return reply1;
+                case 2:
+                    StateReply reply2 = stateTwo(userInput);
+                    return reply2;
+                case 3:
+                    StateReply reply3 = stateThree(userInput);
+                    return reply3;
+                default:
+                    return null;
             }
-
-
-
-
-
-
-            
-            if()
-            if(!ChoosenCinema)
-            {
-                StateReply reply = getStateReplyFromREST();
-                return reply;
-            }
-            if (ChoosenCinema)
-            {
-                string replayMessage = "Your reservation has successfully been completed. Enjoy your Movie !!";
-                StateReply replay = new StateReply(true, replayMessage);
-                return replay;
-            }
-            return null;
         }
 
         private StateReply stateOne(string userInput)
         {
             if (userInput.Contains("selectedLocation="))
             {
-
+                string result = userInput.Replace("selectedLocation=", String.Empty);
+                foreach (Location item in locationList)
+                {
+                    if (item.Name == result)
+                    {
+                        this.locationFound = new Point
+                        {
+                            Latitude = item.Coordinates.Latitude,
+                            Longitude = item.Coordinates.Longitude
+                        };
+                    }
+                }
+                StateNum += 1;
+                //TODO fare il giorno della settimana
             }
             else
             {
+                List<Location> resultList = BingMapsUtility.getLocationFromLocality(userInput);
+                if (resultList == null)
+                {
+                    string replayMessage = "I didin't found your city in the Bing database. Please, can you give me a bigger city near to your location ?";
+                    StateReply replay = new StateReply(true, replayMessage);
+                    return replay;
+                }
+                else
+                {
+                    if (resultList.Count == 1)
+                    {
+                        Location element = resultList.First();
+                        this.locationFound = new Point
+                        {
+                            Latitude = element.Coordinates.Latitude,
+                            Longitude = element.Coordinates.Longitude
+                        };
+                        StateNum += 1;
+                        //TODO fare il giorno della settimana
+                    }
+                    else
+                    {
+                        this.locationList = resultList;
+                        string replayMessage = "These are all the city that I've found. Please click only one choice";
+                        StateReply replay = new StateReply(false, replayMessage, "herocard");
+                        string heroCardTitle = "Select your city";
 
+                        List<CardAction> cardButtons = new List<CardAction>();
+
+                        foreach (Location item in locationList)
+                        {
+                            string title = item.Name;
+                            string value = "selectedLocation=" + item.Name;
+                            CardAction plButton = new CardAction()
+                            {
+                                Value = value,
+                                Type = "imBack",
+                                Title = title
+                            };
+                            cardButtons.Add(plButton);
+                        }
+
+                        replay.HeroCard = replay.HeroCard = ReplyUtilitycs.generatesHeroCardStateReply(cardButtons, heroCardTitle, "please select one");
+                        return replay;
+                    }
+                }
             }
             return null;
         }
@@ -95,8 +144,9 @@ namespace MovieBot.States
             }
         }
 
-        private StateReply getStateReplyFromREST()
+        private StateReply stateTwo(string userInput)
         {
+            //TODO salvare la data e fare la Query Giusta
             string request = "v1/Search/CinemaFromMovie?imdbid=" + ChoosenMovie.ImdbDb;
             string urlRequest = ConnectionUtility.CreateGetRequest(request);
             WebResponse response = ConnectionUtility.MakeRequest(urlRequest);
@@ -126,16 +176,16 @@ namespace MovieBot.States
                 cardButtons.Add(plButton);
             }
 
-            HeroCard plCard = new HeroCard()
-            {
-                Title = heroCardTitle,
-                Subtitle = "Please choose you preferite one",
-                Buttons = cardButtons
-            };
-
-            replay.HeroCard = plCard;
+            replay.HeroCard = ReplyUtilitycs.generatesHeroCardStateReply(cardButtons,heroCardTitle,"please select one");
             ChoosenCinema = true;
+            StateNum += 1;
+            return replay;
+        }
 
+        private StateReply stateThree(string userInput)
+        {
+            string replayMessage = "Your reservation has successfully been completed. Enjoy your Movie !!";
+            StateReply replay = new StateReply(true, replayMessage);
             return replay;
         }
     }
