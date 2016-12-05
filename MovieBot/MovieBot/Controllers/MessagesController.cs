@@ -27,17 +27,17 @@ namespace MovieBot
                 Parser parser = new MessageTextParser(activity, connector);
                 MessageStateParser stateParser = new MessageStateParser(activity, connector);
                 Activity reply;
-                if (await stateParser.haveAnswer(activity.Text.ToLower()))
-                {
-                    reply = await stateParser.computeParsing();
-                }
-                else if (parser.haveAnswer(activity.Text.ToLower()))
+                if (parser.haveAnswer(activity.Text.ToLower()))
                 {
                     reply = await parser.computeParsing();
                 }
+                else if (await stateParser.haveAnswer(activity.Text.ToLower()))
+                {
+                    reply = stateParser.computeParsing();
+                }
                 else
                 {
-                    reply = activity.CreateReply("Sorry, due to internal error, I can't manage your request");
+                    reply = activity.CreateReply("Sorry, I don't understand your request, please write me Help in order to my functionalities");
                 } 
                 APIResponse result = await connector.Conversations.ReplyToActivityAsync(reply);
             }
