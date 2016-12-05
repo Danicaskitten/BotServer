@@ -8,7 +8,7 @@ namespace MovieBot.Utility
 {
     public static class ReplyUtilitycs
     {
-        public static HeroCard generatesHeroCardStateReply(List<CardAction> cardButtons, string heroCardTitle, string heroCardSub)
+        public static HeroCard generateHeroCardStateReply(List<CardAction> cardButtons, string heroCardTitle, string heroCardSub)
         {
             HeroCard plCard = new HeroCard()
             {
@@ -17,6 +17,32 @@ namespace MovieBot.Utility
                 Buttons = cardButtons
             };
             return plCard;
+        }
+
+        public static StateReply generateWeekDayReply()
+        {
+            string replayMessage = "These are all the possible dates in which I have found projections";
+            StateReply reply = new StateReply(false, replayMessage, "herocard");
+            string heroCardTitle = "Please select the day in which you want go to the cinema";
+
+            List<CardAction> cardButtons = new List<CardAction>();
+            DateTime today = DateTime.Today;
+            int daysUntilTuesday = (((int)DayOfWeek.Wednesday - (int)today.DayOfWeek + 7) % 7) + 1;
+            for (int i = 0; i < daysUntilTuesday; i++)
+            {
+                DateTime day = today.AddDays(i);
+                string title = day.DayOfWeek.ToString() + " " +day.ToString() ;
+                string value = "selectedDay="+day.ToString();
+                CardAction plButton = new CardAction()
+                {
+                    Value = value,
+                    Type = "imBack",
+                    Title = title
+                };
+                cardButtons.Add(plButton);
+            }
+            reply.HeroCard = ReplyUtilitycs.generateHeroCardStateReply(cardButtons, heroCardTitle, "please select one");
+            return reply;
         }
     }
 }

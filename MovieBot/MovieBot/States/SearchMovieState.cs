@@ -108,7 +108,7 @@ namespace MovieBot.States
                             cardButtons.Add(plButton);
                         }
 
-                        replay.HeroCard = replay.HeroCard = ReplyUtilitycs.generatesHeroCardStateReply(cardButtons, heroCardTitle, "please select one");
+                        replay.HeroCard = replay.HeroCard = ReplyUtilitycs.generateHeroCardStateReply(cardButtons, heroCardTitle, "please select one");
                         return replay;
                     }
                 }
@@ -176,7 +176,7 @@ namespace MovieBot.States
                 cardButtons.Add(plButton);
             }
 
-            replay.HeroCard = ReplyUtilitycs.generatesHeroCardStateReply(cardButtons,heroCardTitle,"please select one");
+            replay.HeroCard = ReplyUtilitycs.generateHeroCardStateReply(cardButtons,heroCardTitle,"please select one");
             ChoosenCinema = true;
             StateNum += 1;
             return replay;
@@ -188,5 +188,7 @@ namespace MovieBot.States
             StateReply replay = new StateReply(true, replayMessage);
             return replay;
         }
+
+
     }
 }
