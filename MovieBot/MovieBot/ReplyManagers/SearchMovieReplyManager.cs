@@ -18,7 +18,9 @@ namespace MovieBot.ReplyManagers
             {
                 ChannelType = activity.ChannelId,
                 UserID = activity.From.Id,
-                ChoosenCinema = false
+                ChoosenCinema = false,
+                LocationRequested = false,
+                StateNum = 0
             };
             
             StateReply stateReplay= state.getReplay(input);
