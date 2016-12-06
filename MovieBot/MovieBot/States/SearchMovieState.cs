@@ -3,6 +3,7 @@ using MovieBot.Contract;
 using MovieBot.Utility;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -20,7 +21,7 @@ namespace MovieBot.States
         public bool ChoosenCinema { get; set; }
         public bool LocationRequested { get; set; }
         public Point locationFound { get; set; }
-        public DateTime timeChoosen { get; set; }
+        public DateTime dateChoosen { get; set; }
         public int StateNum { get; set; }
         public List<Location> locationList { get; set; }
 
@@ -47,12 +48,12 @@ namespace MovieBot.States
 
         private StateReply stateOne(string userInput)
         {
-            if (userInput.Contains("selectedLocation="))
+            if (userInput.Contains("selectedlocation="))
             {
-                string result = userInput.Replace("selectedLocation=", String.Empty);
+                string result = userInput.Replace("selectedlocation=", String.Empty);
                 foreach (Location item in locationList)
                 {
-                    if (item.Name == result)
+                    if (item.Name.ToLower() == result)
                     {
                         this.locationFound = new Point
                         {
@@ -62,7 +63,8 @@ namespace MovieBot.States
                     }
                 }
                 StateNum += 1;
-                //TODO fare il giorno della settimana
+                StateReply reply = ReplyUtility.generateWeekDayReply();
+                return reply;
             }
             else
             {
@@ -70,7 +72,7 @@ namespace MovieBot.States
                 if (resultList == null)
                 {
                     string replayMessage = "I didin't found your city in the Bing database. Please, can you give me a bigger city near to your location ?";
-                    StateReply replay = new StateReply(true, replayMessage);
+                    StateReply replay = new StateReply(false, replayMessage);
                     return replay;
                 }
                 else
@@ -84,7 +86,8 @@ namespace MovieBot.States
                             Longitude = element.Coordinates.Longitude
                         };
                         StateNum += 1;
-                        //TODO fare il giorno della settimana
+                        StateReply reply = ReplyUtility.generateWeekDayReply();
+                        return reply;
                     }
                     else
                     {
@@ -108,12 +111,11 @@ namespace MovieBot.States
                             cardButtons.Add(plButton);
                         }
 
-                        replay.HeroCard = replay.HeroCard = ReplyUtilitycs.generateHeroCardStateReply(cardButtons, heroCardTitle, "please select one");
+                        replay.HeroCard = replay.HeroCard = ReplyUtility.generateHeroCardStateReply(cardButtons, heroCardTitle, "please select one");
                         return replay;
                     }
                 }
             }
-            return null;
         }
 
         private StateReply stateZero(string userInput)
@@ -146,40 +148,50 @@ namespace MovieBot.States
 
         private StateReply stateTwo(string userInput)
         {
-            //TODO salvare la data e fare la Query Giusta
-            string request = "v1/Search/CinemaFromMovie?imdbid=" + ChoosenMovie.ImdbDb;
-            string urlRequest = ConnectionUtility.CreateGetRequest(request);
-            WebResponse response = ConnectionUtility.MakeRequest(urlRequest);
-            Stream responseStream = response.GetResponseStream();
-            StreamReader reader = new StreamReader(responseStream, Encoding.UTF8);
-            string jsonString = reader.ReadToEnd();
-            JavaScriptSerializer json_serializer = new JavaScriptSerializer();
-            CinemaFromMovieOutputModelList cinemaFromMovieOutputModelArray = Newtonsoft.Json.JsonConvert.DeserializeObject<CinemaFromMovieOutputModelList>(jsonString);
-            CinemaFromMovieOutputModel fisrtOnly = cinemaFromMovieOutputModelArray.Data.First();
-
-            string replayMessage = "These are all the projections that I've found. Please click only one choice";
-            StateReply replay = new StateReply(false, replayMessage, "herocard");
-            string heroCardTitle = "These are the projections available in Cinema " + fisrtOnly.Cinema.Name;
-
-            List<CardAction> cardButtons = new List<CardAction>();
-
-            foreach (Projection proj in fisrtOnly.Projections)
+            if (userInput.Contains("selectedday="))
             {
-                string title = "Time Slot: " + proj.Time;
-                string value = "Title=" + ChoosenMovie.Title + ";Cinema=" + fisrtOnly.Cinema.Name + ";Date=" + proj.Date + ";Time=" + proj.Time;
-                CardAction plButton = new CardAction()
-                {
-                    Value = value,
-                    Type = "imBack",
-                    Title = title
-                };
-                cardButtons.Add(plButton);
-            }
+                string selectedDay = userInput.Replace("selectedday=", String.Empty);
+                this.dateChoosen = DateTime.ParseExact(selectedDay, "MM/dd/yyyy", CultureInfo.InvariantCulture);
+                //TODO fare la Query Giusta
+                string request = "v1/Search/CinemaFromMovie?imdbid=" + ChoosenMovie.ImdbDb;
+                string urlRequest = ConnectionUtility.CreateGetRequest(request);
+                WebResponse response = ConnectionUtility.MakeRequest(urlRequest);
+                //TODO creare un metodo che racchiuda queste 5 righe... sono un po' troppo ripetute
+                Stream responseStream = response.GetResponseStream();
+                StreamReader reader = new StreamReader(responseStream, Encoding.UTF8);
+                string jsonString = reader.ReadToEnd();
+                JavaScriptSerializer json_serializer = new JavaScriptSerializer();
+                CinemaFromMovieOutputModelList cinemaFromMovieOutputModelArray = Newtonsoft.Json.JsonConvert.DeserializeObject<CinemaFromMovieOutputModelList>(jsonString);
+                CinemaFromMovieOutputModel fisrtOnly = cinemaFromMovieOutputModelArray.Data.First();
 
-            replay.HeroCard = ReplyUtilitycs.generateHeroCardStateReply(cardButtons,heroCardTitle,"please select one");
-            ChoosenCinema = true;
-            StateNum += 1;
-            return replay;
+                string replayMessage = "These are all the projections that I've found. Please click only one choice";
+                StateReply replay = new StateReply(false, replayMessage, "herocard");
+                string heroCardTitle = "These are the projections available in Cinema " + fisrtOnly.Cinema.Name;
+
+                List<CardAction> cardButtons = new List<CardAction>();
+
+                foreach (Projection proj in fisrtOnly.Projections)
+                {
+                    string title = "Time Slot: " + proj.Time;
+                    string value = "Title=" + ChoosenMovie.Title + ";Cinema=" + fisrtOnly.Cinema.Name + ";Date=" + proj.Date + ";Time=" + proj.Time;
+                    CardAction plButton = new CardAction()
+                    {
+                        Value = value,
+                        Type = "imBack",
+                        Title = title
+                    };
+                    cardButtons.Add(plButton);
+                }
+
+                replay.HeroCard = ReplyUtility.generateHeroCardStateReply(cardButtons, heroCardTitle, "please select one");
+                ChoosenCinema = true;
+                StateNum += 1;
+                return replay;
+            }
+            else
+            {
+                return null;
+            }
         }
 
         private StateReply stateThree(string userInput)

@@ -6,7 +6,7 @@ using System.Web;
 
 namespace MovieBot.Utility
 {
-    public static class ReplyUtilitycs
+    public static class ReplyUtility
     {
         public static HeroCard generateHeroCardStateReply(List<CardAction> cardButtons, string heroCardTitle, string heroCardSub)
         {
@@ -31,8 +31,8 @@ namespace MovieBot.Utility
             for (int i = 0; i < daysUntilTuesday; i++)
             {
                 DateTime day = today.AddDays(i);
-                string title = day.DayOfWeek.ToString() + " " +day.ToString() ;
-                string value = "selectedDay="+day.ToString();
+                string title = day.DayOfWeek.ToString() + " " +day.ToString("MM/dd/yyyy") ;
+                string value = "selectedDay="+day.ToString("MM/dd/yyyy");
                 CardAction plButton = new CardAction()
                 {
                     Value = value,
@@ -41,7 +41,7 @@ namespace MovieBot.Utility
                 };
                 cardButtons.Add(plButton);
             }
-            reply.HeroCard = ReplyUtilitycs.generateHeroCardStateReply(cardButtons, heroCardTitle, "please select one");
+            reply.HeroCard = ReplyUtility.generateHeroCardStateReply(cardButtons, heroCardTitle, "please select one");
             return reply;
         }
     }
