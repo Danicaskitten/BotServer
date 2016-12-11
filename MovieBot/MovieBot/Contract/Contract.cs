@@ -9,7 +9,7 @@ namespace MovieBot.Contract
     public class Movie
     {
         public string Title { get; set; }
-        public string ImdbDb { get; set; }
+        public string ImdbID { get; set; }
         public object Poster { get; set; }
         public object Runtime { get; set; }
         public object Plot { get; set; }
@@ -19,7 +19,7 @@ namespace MovieBot.Contract
     public class Cinema
     {
         public string Name { get; set; }
-        public string CinemaID { get; set; }
+        public int CinemaID { get; set; }
         public string Address { get; set; }
         public double Latitude { get; set; }
         public double Longitude { get; set; }
@@ -32,20 +32,19 @@ namespace MovieBot.Contract
     public class Projection
     {
         public string ImdbID { get; set; }
-        public string CinemaID { get; set; }
+        public int CinemaID { get; set; }
         public string Date { get; set; }
         public string Time { get; set; }
     }
 
-    public class CinemaFromMovieOutputModel
+    public class ProjectionsList
     {
-        public Cinema Cinema { get; set; }
-        public List<Projection> Projections { get; set; }
-        public string ImdbId { get; set; }
+        public List<Projection> Data { get; set; }
     }
-    public class CinemaFromMovieOutputModelList
+
+    public class CinemaList
     {
-        public List<CinemaFromMovieOutputModel> Data { get; set; }
+        public List<Cinema> Data { get; set; }
     }
 
     public class MovieList
