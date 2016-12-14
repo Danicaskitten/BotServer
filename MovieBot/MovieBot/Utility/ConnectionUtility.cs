@@ -46,7 +46,7 @@ namespace MovieBot.Utility
             string jsonString = reader.ReadToEnd();
             JavaScriptSerializer json_serializer = new JavaScriptSerializer();
             T deserialized = Newtonsoft.Json.JsonConvert.DeserializeObject<T>(jsonString);
-            return deserialized
+            return deserialized;
         }
     }
 }

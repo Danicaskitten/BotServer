@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Runtime.Serialization;
 
-namespace MovieBot.Contract
+namespace MovieBot.Contract.SearchMovies
 {
     public class Movie
     {

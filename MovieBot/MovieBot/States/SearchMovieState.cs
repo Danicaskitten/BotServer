@@ -1,4 +1,5 @@
 ﻿using Microsoft.Bot.Connector;
+using MovieBot.Contract.SearchMovies;
 using MovieBot.Contract;
 using MovieBot.Utility;
 using System;
@@ -64,7 +65,8 @@ namespace MovieBot.States
                     }
                 }
                 StateNum = 2;
-                StateReply reply = ReplyUtility.generateWeekDayReply();
+                string replayMessage = "These are all the possible dates in which I have found projections";
+                StateReply reply = ReplyUtility.generateWeekDayReply(replayMessage);
                 return reply;
             }
             else
@@ -72,8 +74,8 @@ namespace MovieBot.States
                 List<Location> resultList = BingMapsUtility.getLocationFromLocality(userInput);
                 if (resultList == null)
                 {
-                    string replayMessage = "I didin't found your city in the Bing database. Please, can you give me a bigger city near to your location ?";
-                    StateReply replay = new StateReply(false, replayMessage);
+                    string replyMessage = "I didin't found your city in the Bing database. Please, can you give me a bigger city near to your location ?";
+                    StateReply replay = new StateReply(false, replyMessage);
                     return replay;
                 }
                 else
@@ -87,7 +89,8 @@ namespace MovieBot.States
                             Longitude = element.Coordinates.Longitude
                         };
                         StateNum += 1;
-                        StateReply reply = ReplyUtility.generateWeekDayReply();
+                        string replyMessage = "These are all the possible dates in which I have found projections";
+                        StateReply reply = ReplyUtility.generateWeekDayReply(replyMessage);
                         return reply;
                     }
                     else
@@ -112,7 +115,7 @@ namespace MovieBot.States
                             cardButtons.Add(plButton);
                         }
 
-                        replay.HeroCard = replay.HeroCard = ReplyUtility.generateHeroCardStateReply(cardButtons, heroCardTitle, "please select one");
+                        replay.HeroCard = ReplyUtility.generateHeroCardStateReply(cardButtons, heroCardTitle, "please select one");
                         return replay;
                     }
                 }
