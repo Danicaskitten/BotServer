@@ -23,23 +23,32 @@ namespace MovieBot.ReplyManagers
             };
 
             StateReply stateReplay = state.getReplay(input);
-            StateClient stateClient = activity.GetStateClient();
-            if (!(stateReplay.IsFinalState))
+            if(stateReplay != null)
             {
-                BotData userData = await stateClient.BotState.GetUserDataAsync(activity.ChannelId, activity.From.Id);
-                userData.SetProperty<bool>("searchMovie", true);
-                //await stateClient.BotState.SetUserDataAsync(activity.ChannelId, activity.From.Id, userData);
+                StateClient stateClient = activity.GetStateClient();
+                if (!(stateReplay.IsFinalState))
+                {
+                    BotData userData = await stateClient.BotState.GetUserDataAsync(activity.ChannelId, activity.From.Id);
+                    userData.SetProperty<bool>("searchMovie", true);
+                    //await stateClient.BotState.SetUserDataAsync(activity.ChannelId, activity.From.Id, userData);
 
-                userData.SetProperty<SearchMovieState>("SearchState", state);
-                BotData response = await stateClient.BotState.SetUserDataAsync(activity.ChannelId, activity.From.Id, userData);
+                    userData.SetProperty<SearchMovieState>("SearchState", state);
+                    BotData response = await stateClient.BotState.SetUserDataAsync(activity.ChannelId, activity.From.Id, userData);
+                }
+                else
+                {
+                    await stateClient.BotState.DeleteStateForUserAsync(activity.ChannelId, activity.From.Id);
+                }
+
+                Activity replyToConversation = activity.CreateReply(stateReplay.GetReplayMessage);
+                return replyToConversation;
             }
             else
             {
-                await stateClient.BotState.DeleteStateForUserAsync(activity.ChannelId, activity.From.Id);
+                Activity replyToConversation = activity.CreateReply("Something went wrong in the message parsing, please try to restart your request");
+                return replyToConversation;
             }
-
-            Activity replyToConversation = activity.CreateReply(stateReplay.GetReplayMessage);
-            return replyToConversation;
+            
         }
 
         public override async Task<Activity> getResponseWithState<T>(T stateInput)
@@ -49,34 +58,42 @@ namespace MovieBot.ReplyManagers
                 T temp = (T)(object)stateInput;
                 SearchCinemaState state = (SearchCinemaState)(object)stateInput;
                 StateReply stateReplay = state.getReplay(input);
-                StateClient stateClient = activity.GetStateClient();
-                if (!(stateReplay.IsFinalState))
+                if (stateReplay != null)
                 {
-                    BotData userData = await stateClient.BotState.GetUserDataAsync(activity.ChannelId, activity.From.Id);
-                    userData.SetProperty<bool>("SearchMovie", true);
-                    //await stateClient.BotState.SetUserDataAsync(activity.ChannelId, activity.From.Id, userData);
+                    StateClient stateClient = activity.GetStateClient();
+                    if (!(stateReplay.IsFinalState))
+                    {
+                        BotData userData = await stateClient.BotState.GetUserDataAsync(activity.ChannelId, activity.From.Id);
+                        userData.SetProperty<bool>("SearchMovie", true);
+                        //await stateClient.BotState.SetUserDataAsync(activity.ChannelId, activity.From.Id, userData);
 
-                    userData.SetProperty<SearchState>("SearchMovieState", state);
-                    BotData response = await stateClient.BotState.SetUserDataAsync(activity.ChannelId, activity.From.Id, userData);
+                        userData.SetProperty<SearchState>("SearchMovieState", state);
+                        BotData response = await stateClient.BotState.SetUserDataAsync(activity.ChannelId, activity.From.Id, userData);
+                    }
+                    else
+                    {
+                        await stateClient.BotState.DeleteStateForUserAsync(activity.ChannelId, activity.From.Id);
+                    }
+
+                    Activity replyToConversation = activity.CreateReply(stateReplay.GetReplayMessage);
+
+                    if (stateReplay.GetSpecial == "herocard")
+                    {
+                        HeroCard heroGet = stateReplay.HeroCard;
+                        replyToConversation.Recipient = activity.From;
+                        replyToConversation.Type = "message";
+                        replyToConversation.Attachments = new List<Attachment>();
+
+                        Attachment plAttachment = heroGet.ToAttachment();
+                        replyToConversation.Attachments.Add(plAttachment);
+                    }
+                    return replyToConversation;
                 }
                 else
                 {
-                    await stateClient.BotState.DeleteStateForUserAsync(activity.ChannelId, activity.From.Id);
+                    Activity replyToConversation = activity.CreateReply("Something went wrong in the message parsing, please try to restart your request");
+                    return replyToConversation;
                 }
-
-                Activity replyToConversation = activity.CreateReply(stateReplay.GetReplayMessage);
-
-                if (stateReplay.GetSpecial == "herocard")
-                {
-                    HeroCard heroGet = stateReplay.HeroCard;
-                    replyToConversation.Recipient = activity.From;
-                    replyToConversation.Type = "message";
-                    replyToConversation.Attachments = new List<Attachment>();
-
-                    Attachment plAttachment = heroGet.ToAttachment();
-                    replyToConversation.Attachments.Add(plAttachment);
-                }
-                return replyToConversation;
             }
             else
             {

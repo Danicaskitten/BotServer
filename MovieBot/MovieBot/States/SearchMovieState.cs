@@ -134,12 +134,8 @@ namespace MovieBot.States
                 string request = "v2/movies/title/" + userInput +"/";
                 string urlRequest = ConnectionUtility.CreateGetRequest(request);
                 WebResponse response = ConnectionUtility.MakeRequest(urlRequest);
-                Stream responseStream = response.GetResponseStream();
-                StreamReader reader = new StreamReader(responseStream, Encoding.UTF8);
-                string jsonString = reader.ReadToEnd();
-                Console.WriteLine(jsonString);
-                JavaScriptSerializer json_serializer = new JavaScriptSerializer();
-                MovieList movieArray = Newtonsoft.Json.JsonConvert.DeserializeObject<MovieList>(jsonString);
+                MovieList movieArray = ConnectionUtility.deserialise<MovieList>(response);
+
                 if (movieArray.Data.Count != 0)
                 {
                     Movie selected_movie = movieArray.Data.First();
@@ -170,12 +166,7 @@ namespace MovieBot.States
                 string requestWithParameter = request + "/?StartDate=" + this.dateChoosen.ToString("yyyy-MM-dd") + "&EndDate=" + this.dateChoosen.AddDays(1).ToString("yyyy-MM-dd") + "&maxRange=100";
                 string urlRequest = ConnectionUtility.CreateGetRequest(requestWithParameter);
                 WebResponse response = ConnectionUtility.MakeRequest(urlRequest);
-                //TODO creare un metodo che racchiuda queste 5 righe... sono un po' troppo ripetute
-                Stream responseStream = response.GetResponseStream();
-                StreamReader reader = new StreamReader(responseStream, Encoding.UTF8);
-                string jsonString = reader.ReadToEnd();
-                JavaScriptSerializer json_serializer = new JavaScriptSerializer();
-                CinemaList cinemaArray = Newtonsoft.Json.JsonConvert.DeserializeObject<CinemaList>(jsonString);
+                CinemaList cinemaArray = ConnectionUtility.deserialise<CinemaList>(response);
 
                 if (cinemaArray.Data.Count != 0)
                 {
@@ -225,12 +216,7 @@ namespace MovieBot.States
                 string requestWithParameter = request + "/?StartDate=" + this.dateChoosen.ToString("yyyy-MM-dd") + "&EndDate=" + this.dateChoosen.AddDays(1).ToString("yyyy-MM-dd");
                 string urlRequest = ConnectionUtility.CreateGetRequest(requestWithParameter);
                 WebResponse response = ConnectionUtility.MakeRequest(urlRequest);
-                //TODO creare un metodo che racchiuda queste 5 righe... sono un po' troppo ripetute
-                Stream responseStream = response.GetResponseStream();
-                StreamReader reader = new StreamReader(responseStream, Encoding.UTF8);
-                string jsonString = reader.ReadToEnd();
-                JavaScriptSerializer json_serializer = new JavaScriptSerializer();
-                ProjectionsList cinemaArray = Newtonsoft.Json.JsonConvert.DeserializeObject<ProjectionsList>(jsonString);
+                ProjectionsList cinemaArray = ConnectionUtility.deserialise<ProjectionsList>(response);
 
                 if (cinemaArray.Data.Count != 0)
                 {
