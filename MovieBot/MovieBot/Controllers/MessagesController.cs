@@ -43,7 +43,7 @@ namespace MovieBot
             }
             else
             {
-                Activity reply = HandleSystemMessage(activity);
+                Activity reply = await HandleSystemMessage(activity);
                 await connector.Conversations.ReplyToActivityAsync(reply);
             }
             var response = Request.CreateResponse(HttpStatusCode.OK);
@@ -55,7 +55,7 @@ namespace MovieBot
         /// </summary>
         /// <param name="activity"></param>
         /// <returns></returns>
-        private Activity HandleSystemMessage(Activity activity)
+        private async Task<Activity> HandleSystemMessage(Activity activity)
         {
             Activity reply = new Activity();
 
@@ -70,16 +70,16 @@ namespace MovieBot
                 // Use Activity.MembersAdded and Activity.MembersRemoved and Activity.Action for info
                 // Not available in all channels
                 ConnectorClient connector = new ConnectorClient(new Uri(activity.ServiceUrl));
-                string startMessage = StartMessage.getStartMessage();
-                reply = activity.CreateReply(startMessage);
+                ReplyManager manager = new StartMessageReplyManager(activity, activity.Text.ToLower());
+                reply = await manager.getResponse();
             }
             else if (activity.Type == ActivityTypes.ContactRelationUpdate)
             {
                 // Handle add/remove from contact lists
                 // Activity.From + Activity.Action represent what happened
                 ConnectorClient connector = new ConnectorClient(new Uri(activity.ServiceUrl));
-                string startMessage = StartMessage.getStartMessage();
-                reply = activity.CreateReply(startMessage);
+                ReplyManager manager = new StartMessageReplyManager(activity, activity.Text.ToLower());
+                reply = await manager.getResponse();
             }
             else if (activity.Type == ActivityTypes.Typing)
             {
