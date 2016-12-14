@@ -1,1 +1,28 @@
-﻿Hi!!
+﻿*Hello fellow moviegoer!*	
+
+I am **MovieBot** and I will guide you to the achievement of **the best cinema experience!**
+
+I can help you to find a specific movie or cinema and to make a reservation in zero time .
+
+Here is the list of the commands that I understand:
+
+1.	**Search Movie [title] or SearchMovie [title]**
+
+	I will discover if the movie that you want is displayed in a cinema near your location.
+	I will tell you all the cinemas that display the movie that you want and I will help you to make a reservation
+
+2.	**SearchCinema [name] or Search Cinema [name]**
+
+	I will discover what movies are displayed in the cinema that you want and I will help you to make a reservation for the movie that you choose.
+
+3.	**Ask me for help**
+
+	I will provide you all the information that you need 
+
+I will show you the list of the commands that I understand, so that we can get on better and I can be more helpful in your experience
+
+**Notes**
+
+* All the parameters surrounded by [] are optional
+
+* The bot is not case sensitive, so capital letters are not necessary
