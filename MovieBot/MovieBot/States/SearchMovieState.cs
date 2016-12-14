@@ -18,8 +18,6 @@ namespace MovieBot.States
         public string ChannelType { get; set; }
         public string UserID { get; set; }
         public Movie ChoosenMovie { get; set; }
-        public bool ChoosenCinema { get; set; }
-        public bool LocationRequested { get; set; }
         public Point locationFound { get; set; }
         public DateTime dateChoosen { get; set; }
         public int StateNum { get; set; }
@@ -190,7 +188,6 @@ namespace MovieBot.States
                     }
 
                     replay.HeroCard = ReplyUtility.generateHeroCardStateReply(cardButtons, heroCardTitle, "please select one");
-                    ChoosenCinema = true;
                     StateNum = 3;
                     return replay;
                 }
@@ -248,7 +245,6 @@ namespace MovieBot.States
                     cardButtons.Add(plButton1);
 
                     replay.HeroCard = ReplyUtility.generateHeroCardStateReply(cardButtons, heroCardTitle, "please select one");
-                    ChoosenCinema = true;
                     StateNum = 4;
                     return replay;
                 }

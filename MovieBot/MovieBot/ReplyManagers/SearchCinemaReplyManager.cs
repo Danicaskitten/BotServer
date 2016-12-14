@@ -15,11 +15,11 @@ namespace MovieBot.ReplyManagers
 
         public override async Task<Activity> getResponse()
         {
-            SearchMovieState state = new SearchMovieState
+            SearchCinemaState state = new SearchCinemaState
             {
                 ChannelType = activity.ChannelId,
                 UserID = activity.From.Id,
-                ChoosenCinema = false
+                StateNum = 0
             };
 
             StateReply stateReplay = state.getReplay(input);
@@ -29,10 +29,9 @@ namespace MovieBot.ReplyManagers
                 if (!(stateReplay.IsFinalState))
                 {
                     BotData userData = await stateClient.BotState.GetUserDataAsync(activity.ChannelId, activity.From.Id);
-                    userData.SetProperty<bool>("searchMovie", true);
-                    //await stateClient.BotState.SetUserDataAsync(activity.ChannelId, activity.From.Id, userData);
+                    userData.SetProperty<bool>("SearchCinema", true);
 
-                    userData.SetProperty<SearchMovieState>("SearchState", state);
+                    userData.SetProperty<SearchCinemaState>("SearchCinemaState", state);
                     BotData response = await stateClient.BotState.SetUserDataAsync(activity.ChannelId, activity.From.Id, userData);
                 }
                 else
@@ -41,6 +40,18 @@ namespace MovieBot.ReplyManagers
                 }
 
                 Activity replyToConversation = activity.CreateReply(stateReplay.GetReplayMessage);
+
+                if (stateReplay.GetSpecial == "herocard")
+                {
+                    HeroCard heroGet = stateReplay.HeroCard;
+                    replyToConversation.Recipient = activity.From;
+                    replyToConversation.Type = "message";
+                    replyToConversation.Attachments = new List<Attachment>();
+
+                    Attachment plAttachment = heroGet.ToAttachment();
+                    replyToConversation.Attachments.Add(plAttachment);
+                }
+
                 return replyToConversation;
             }
             else
@@ -64,10 +75,9 @@ namespace MovieBot.ReplyManagers
                     if (!(stateReplay.IsFinalState))
                     {
                         BotData userData = await stateClient.BotState.GetUserDataAsync(activity.ChannelId, activity.From.Id);
-                        userData.SetProperty<bool>("SearchMovie", true);
-                        //await stateClient.BotState.SetUserDataAsync(activity.ChannelId, activity.From.Id, userData);
-
-                        userData.SetProperty<SearchState>("SearchMovieState", state);
+                        userData.SetProperty<bool>("SearchCinema", true);
+                        
+                        userData.SetProperty<SearchCinemaState>("SearchCinemaState", state);
                         BotData response = await stateClient.BotState.SetUserDataAsync(activity.ChannelId, activity.From.Id, userData);
                     }
                     else

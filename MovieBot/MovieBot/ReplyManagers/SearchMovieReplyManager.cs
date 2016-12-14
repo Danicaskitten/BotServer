@@ -18,20 +18,19 @@ namespace MovieBot.ReplyManagers
             {
                 ChannelType = activity.ChannelId,
                 UserID = activity.From.Id,
-                ChoosenCinema = false
+                StateNum = 0
             };
-
-            StateReply stateReplay = state.getReplay(input);
+            
+            StateReply stateReplay= state.getReplay(input);
             if (stateReplay != null)
             {
                 StateClient stateClient = activity.GetStateClient();
                 if (!(stateReplay.IsFinalState))
                 {
                     BotData userData = await stateClient.BotState.GetUserDataAsync(activity.ChannelId, activity.From.Id);
-                    userData.SetProperty<bool>("searchMovie", true);
-                    //await stateClient.BotState.SetUserDataAsync(activity.ChannelId, activity.From.Id, userData);
+                    userData.SetProperty<bool>("SearchMovie", true);
 
-                    userData.SetProperty<SearchMovieState>("SearchState", state);
+                    userData.SetProperty<SearchMovieState>("SearchMovieState", state);
                     BotData response = await stateClient.BotState.SetUserDataAsync(activity.ChannelId, activity.From.Id, userData);
                 }
                 else
@@ -47,15 +46,14 @@ namespace MovieBot.ReplyManagers
                 Activity replyToConversation = activity.CreateReply("Something went wrong in the message parsing, please try to restart your request");
                 return replyToConversation;
             }
-
         }
 
         public override async Task<Activity> getResponseWithState<T>(T stateInput)
         {
-            if (typeof(T) == typeof(SearchCinemaState))
+            if(typeof(T) == typeof(SearchMovieState))
             {
                 T temp = (T)(object)stateInput;
-                SearchCinemaState state = (SearchCinemaState)(object)stateInput;
+                SearchMovieState state = (SearchMovieState)(object)stateInput;
                 StateReply stateReplay = state.getReplay(input);
                 if (stateReplay != null)
                 {
@@ -66,7 +64,7 @@ namespace MovieBot.ReplyManagers
                         userData.SetProperty<bool>("SearchMovie", true);
                         //await stateClient.BotState.SetUserDataAsync(activity.ChannelId, activity.From.Id, userData);
 
-                        userData.SetProperty<SearchState>("SearchMovieState", state);
+                        userData.SetProperty<SearchMovieState>("SearchMovieState", state);
                         BotData response = await stateClient.BotState.SetUserDataAsync(activity.ChannelId, activity.From.Id, userData);
                     }
                     else
