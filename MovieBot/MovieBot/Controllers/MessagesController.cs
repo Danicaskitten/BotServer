@@ -24,6 +24,7 @@ namespace MovieBot
             ConnectorClient connector = new ConnectorClient(new Uri(activity.ServiceUrl));
             if (activity.Type == ActivityTypes.Message)
             {
+                //TODO add the LUIS parser (magari fare un bel ciclo)
                 Parser.Parser parser = new MessageTextParser(activity, connector);
                 MessageStateParser stateParser = new MessageStateParser(activity, connector);
                 Activity reply;

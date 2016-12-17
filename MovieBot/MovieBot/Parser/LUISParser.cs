@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
 using Microsoft.Bot.Connector;
 using MovieBot.Contract.LUIS;
 using MovieBot.Utility;
