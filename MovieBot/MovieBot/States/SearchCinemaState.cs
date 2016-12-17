@@ -130,73 +130,61 @@ namespace MovieBot.States
 
         private StateReply stateOne(string userInput)
         {
-            if (userInput.Contains("selectedlocation="))
+            if (userInput.Contains("selectedday="))
             {
-                string result = userInput.Replace("selectedlocation=", String.Empty);
-                foreach (Location item in locationList)
+                string selectedDay = userInput.Replace("selectedday=", String.Empty);
+                NumberFormatInfo nfi = new NumberFormatInfo();
+                this.dateChoosen = DateTime.ParseExact(selectedDay, "MM/dd/yyyy", CultureInfo.InvariantCulture);
+
+                string request = "v2/cinemas/id/" + this.ChoosenCinema.CinemaID + "/movies";
+                string requestWithParameter = request + "/?StartDate=" + this.dateChoosen.ToString("yyyy-MM-dd") + "&EndDate=" + this.dateChoosen.AddDays(1).ToString("yyyy-MM-dd") + "&maxRange=100";
+                string urlRequest = ConnectionUtility.CreateGetRequest(requestWithParameter);
+                WebResponse response = ConnectionUtility.MakeRequest(urlRequest);
+                MovieList movieArray = ConnectionUtility.deserialise<MovieList>(response);
+
+                if (movieArray.Data.Count != 0)
                 {
-                    if (item.Name.ToLower() == result)
+                    string replayMessage = "These are all the Movies that are available in "+ ChoosenCinema.Name;
+                    StateReply replay = new StateReply(false, replayMessage, "herocard");
+                    string heroCardTitle = "Here they are";
+
+                    List<CardAction> cardButtons = new List<CardAction>();
+
+                    foreach (Movie movie in movieArray.Data)
                     {
-                        this.locationFound = new Point
+                        string title = movie.Title;
+                        string value = "movieSelected=" + movie.ImdbID;
+                        CardAction plButton = new CardAction()
                         {
-                            Latitude = item.Coordinates.Latitude,
-                            Longitude = item.Coordinates.Longitude
+                            Value = value,
+                            Type = "imBack",
+                            Title = title
                         };
+                        cardButtons.Add(plButton);
                     }
-                }
-                StateNum = 2;
-                StateReply reply = ReplyUtility.generateWeekDayReply();
-                return reply;
-            }
-            else
-            {
-                List<Location> resultList = BingMapsUtility.getLocationFromLocality(userInput);
-                if (resultList == null)
-                {
-                    string replayMessage = "I didin't found your city in the Bing database. Please, can you give me a bigger city near to your location ?";
-                    StateReply replay = new StateReply(false, replayMessage);
+
+                    CardAction plButton1 = new CardAction()
+                    {
+                        Value = "Back",
+                        Type = "imBack",
+                        Title = "Back"
+                    };
+                    cardButtons.Add(plButton1);
+
+                    replay.HeroCard = ReplyUtility.generateHeroCardStateReply(cardButtons, heroCardTitle, "please select one");
+                    StateNum = 2;
                     return replay;
                 }
                 else
                 {
-                    if (resultList.Count == 1)
-                    {
-                        Location element = resultList.First();
-                        this.locationFound = new Point
-                        {
-                            Latitude = element.Coordinates.Latitude,
-                            Longitude = element.Coordinates.Longitude
-                        };
-                        StateNum += 1;
-                        StateReply reply = ReplyUtility.generateWeekDayReply();
-                        return reply;
-                    }
-                    else
-                    {
-                        this.locationList = resultList;
-                        string replayMessage = "These are all the city that I've found. Please click only one choice";
-                        StateReply replay = new StateReply(false, replayMessage, "herocard");
-                        string heroCardTitle = "Select your city";
-
-                        List<CardAction> cardButtons = new List<CardAction>();
-
-                        foreach (Location item in locationList)
-                        {
-                            string title = item.Name;
-                            string value = "selectedLocation=" + item.Name;
-                            CardAction plButton = new CardAction()
-                            {
-                                Value = value,
-                                Type = "imBack",
-                                Title = title
-                            };
-                            cardButtons.Add(plButton);
-                        }
-
-                        replay.HeroCard = ReplyUtility.generateHeroCardStateReply(cardButtons, heroCardTitle, "please select one");
-                        return replay;
-                    }
+                    string replayMessage = "I didin't found any movies in my database. Please restart againg the search cinema with a new cinema";
+                    StateReply replay = new StateReply(true, replayMessage);
+                    return replay;
                 }
+            }
+            else
+            {
+                return null;
             }
         }
 
