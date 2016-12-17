@@ -19,6 +19,7 @@ namespace MovieBot.States
         public string ChannelType { get; set; }
         public string UserID { get; set; }
         public Cinema ChoosenCinema { get; set; }
+        public List<Cinema> cinemaList { get; set; }
         public Point locationFound { get; set; }
         public DateTime dateChoosen { get; set; }
         public int StateNum { get; set; }
@@ -48,7 +49,6 @@ namespace MovieBot.States
             }
         }
         //TODO fatto solo stateZero
-        //TODO finire lo state Zero nel caso della scelta dell'utente: ovvero fare if (userInput.contains("selectedcinema=")) etc...
         private StateReply stateZero(string userInput)
         {
             if (string.IsNullOrEmpty(userInput))
@@ -59,52 +59,71 @@ namespace MovieBot.States
             }
             else
             {
-                string request = "v2/cinemas/name/" + userInput + "/";
-                string urlRequest = ConnectionUtility.CreateGetRequest(request);
-                WebResponse response = ConnectionUtility.MakeRequest(urlRequest);
-                CinemaList cinemaArray = ConnectionUtility.deserialise<CinemaList>(response);
+                if (userInput.Contains("selectedcinema=")) {
+                    string request = "v2/cinemas/name/" + userInput + "/";
+                    string urlRequest = ConnectionUtility.CreateGetRequest(request);
+                    WebResponse response = ConnectionUtility.MakeRequest(urlRequest);
+                    CinemaList cinemaArray = ConnectionUtility.deserialise<CinemaList>(response);
+                    this.cinemaList = cinemaArray.Data;
 
-                if (cinemaArray.Data.Count != 0)
-                {
-                    if (cinemaArray.Data.Count > 1)
+                    if (cinemaArray.Data.Count != 0)
                     {
-                        string replayMessage = "These are all the cinemas that I've found. Please your desired one";
-                        StateReply replay = new StateReply(false, replayMessage, "herocard");
-                        string heroCardTitle = "Select your cinema";
-
-                        List<CardAction> cardButtons = new List<CardAction>();
-
-                        foreach (Cinema Cinema in cinemaArray.Data)
+                        if (cinemaArray.Data.Count > 1)
                         {
-                            string title = Cinema.Name + " City: " + Cinema.City;
-                            string value = "selectedCinema=" + Cinema.CinemaID;
-                            CardAction plButton = new CardAction()
-                            {
-                                Value = value,
-                                Type = "imBack",
-                                Title = title
-                            };
-                            cardButtons.Add(plButton);
-                        }
+                            string replayMessage = "These are all the cinemas that I've found. Please your desired one";
+                            StateReply replay = new StateReply(false, replayMessage, "herocard");
+                            string heroCardTitle = "Select your cinema";
 
-                        replay.HeroCard = ReplyUtility.generateHeroCardStateReply(cardButtons, heroCardTitle, "please select one");
-                        return replay;
+                            List<CardAction> cardButtons = new List<CardAction>();
+
+                            foreach (Cinema Cinema in cinemaArray.Data)
+                            {
+                                string title = Cinema.Name + " City: " + Cinema.City;
+                                string value = "selectedCinema=" + Cinema.CinemaID;
+                                CardAction plButton = new CardAction()
+                                {
+                                    Value = value,
+                                    Type = "imBack",
+                                    Title = title
+                                };
+                                cardButtons.Add(plButton);
+                            }
+
+                            replay.HeroCard = ReplyUtility.generateHeroCardStateReply(cardButtons, heroCardTitle, "please select one");
+                            return replay;
+                        }
+                        else
+                        {
+                            Cinema selected_movie = cinemaArray.Data.First();
+                            this.ChoosenCinema = selected_movie;
+                            string replyMessage = "Yai ! I've found " + this.ChoosenCinema.Name + ". When do you want to go?";
+                            StateReply reply = ReplyUtility.generateWeekDayReply(replyMessage);
+                            StateNum = 1;
+                            return reply;
+                        }
                     }
                     else
                     {
-                        Cinema selected_movie = cinemaArray.Data.First();
-                        this.ChoosenCinema = selected_movie;
-                        string replyMessage = "Yai ! I've found " + this.ChoosenCinema.Name + ". When do you want to go there?";
-                        StateReply reply = ReplyUtility.generateWeekDayReply(replyMessage);
-                        StateNum = 1;
-                        return reply;
+                        string replayMessage = "I didin't found any cinemas matches your input. Please try with another one.";
+                        StateReply replay = new StateReply(false, replayMessage);
+                        return replay;
                     }
                 }
                 else
                 {
-                    string replayMessage = "I didin't found any cinemas matches your input. Please try with another one.";
-                    StateReply replay = new StateReply(false, replayMessage);
-                    return replay;
+                    string result = userInput.Replace("selectedlocation=", String.Empty);
+                    foreach (Cinema cinema in cinemaList)
+                    {
+                        if (cinema.CinemaID == Int32.Parse(result))
+                        {
+                            this.ChoosenCinema = cinema;
+                        }
+                    }
+
+                    string replyMessage = "Perfect, thank you for your help. When do you want to go?";
+                    StateReply reply = ReplyUtility.generateWeekDayReply(replyMessage);
+                    StateNum = 1;
+                    return reply;
                 }
             }
         }
