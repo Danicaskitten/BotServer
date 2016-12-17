@@ -7,7 +7,7 @@ using System.Web;
 using MovieBot.ReplyManagers;
 
 
-namespace MovieBot.Utility
+namespace MovieBot.Parser
 {
     /// <summary>
     /// This abstract class is the model for all the parser in this project

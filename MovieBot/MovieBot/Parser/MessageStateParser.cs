@@ -1,6 +1,7 @@
 ﻿using Microsoft.Bot.Connector;
 using MovieBot.ReplyManagers;
 using MovieBot.States;
+using MovieBot.Utility;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Script.Serialization;
 
-namespace MovieBot.Utility
+namespace MovieBot.Parser
 {
     public class MessageStateParser
     {

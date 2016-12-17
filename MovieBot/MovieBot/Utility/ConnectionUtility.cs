@@ -41,12 +41,19 @@ namespace MovieBot.Utility
 
         public static T deserialise<T>(WebResponse response)
         {
-            Stream responseStream = response.GetResponseStream();
-            StreamReader reader = new StreamReader(responseStream, Encoding.UTF8);
-            string jsonString = reader.ReadToEnd();
-            JavaScriptSerializer json_serializer = new JavaScriptSerializer();
-            T deserialized = Newtonsoft.Json.JsonConvert.DeserializeObject<T>(jsonString);
-            return deserialized;
+            if (response != null)
+            {
+                Stream responseStream = response.GetResponseStream();
+                StreamReader reader = new StreamReader(responseStream, Encoding.UTF8);
+                string jsonString = reader.ReadToEnd();
+                JavaScriptSerializer json_serializer = new JavaScriptSerializer();
+                T deserialized = Newtonsoft.Json.JsonConvert.DeserializeObject<T>(jsonString);
+                return deserialized;
+            }
+            else
+            {
+                return default(T);
+            }
         }
     }
 }

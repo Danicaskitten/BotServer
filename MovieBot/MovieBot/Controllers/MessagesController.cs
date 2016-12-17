@@ -8,7 +8,7 @@ using System.Web.Http.Description;
 using Microsoft.Bot.Connector;
 using Newtonsoft.Json;
 using MovieBot.ReplyManagers;
-using MovieBot.Utility;
+using MovieBot.Parser;
 
 namespace MovieBot
 {
@@ -24,7 +24,7 @@ namespace MovieBot
             ConnectorClient connector = new ConnectorClient(new Uri(activity.ServiceUrl));
             if (activity.Type == ActivityTypes.Message)
             {
-                Parser parser = new MessageTextParser(activity, connector);
+                Parser.Parser parser = new MessageTextParser(activity, connector);
                 MessageStateParser stateParser = new MessageStateParser(activity, connector);
                 Activity reply;
                 if (parser.haveAnswer(activity.Text.ToLower()))

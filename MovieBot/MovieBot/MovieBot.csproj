@@ -115,7 +115,7 @@
     <Content Include="default.htm" />
     <Content Include="Global.asax" />
     <Content Include="StandardReplies\start_message.txt" />
-    <Content Include="Utility\parser_dictionary.txt" />
+    <Content Include="Parser\parser_dictionary.txt" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -125,10 +125,12 @@
     <Compile Include="Contract\Bing\BingContract.cs" />
     <Compile Include="Contract\APIContract.cs" />
     <Compile Include="Contract\Location.cs" />
+    <Compile Include="Contract\LUIS\LUISContract.cs" />
     <Compile Include="Controllers\MessagesController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Parser\LUISParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReplyManagers\ManagerEnum.cs" />
     <Compile Include="ReplyManagers\ReplyManager.cs" />
@@ -141,9 +143,10 @@
     <Compile Include="States\SearchState.cs" />
     <Compile Include="Utility\BingMapsUtility.cs" />
     <Compile Include="Utility\ConnectionUtility.cs" />
-    <Compile Include="Utility\MessageStateParser.cs" />
-    <Compile Include="Utility\MessageTextParser.cs" />
-    <Compile Include="Utility\Parser.cs" />
+    <Compile Include="Parser\MessageStateParser.cs" />
+    <Compile Include="Parser\MessageTextParser.cs" />
+    <Compile Include="Parser\Parser.cs" />
+    <Compile Include="Utility\LuisUtility.cs" />
     <Compile Include="Utility\ReplyUtility.cs" />
     <Compile Include="Utility\StateReply.cs" />
     <Compile Include="Utility\StringToEnum.cs" />

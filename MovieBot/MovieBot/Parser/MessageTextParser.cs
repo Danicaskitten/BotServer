@@ -2,13 +2,14 @@
 using Microsoft.Bot.Connector;
 using System.Text.RegularExpressions;
 using MovieBot.ReplyManagers;
+using MovieBot.Utility;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Web.Script.Serialization;
 using System.IO;
 
-namespace MovieBot.Utility
+namespace MovieBot.Parser
 {
     public class MessageTextParser : Parser
     {
