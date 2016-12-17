@@ -36,7 +36,6 @@ namespace MovieBot.Utility
                     return true;
                 }
             }
-            //Activity reply = activity.CreateReply("Sorry, I am only an alpha prototype. So I reply only to the command \"search movie Title\"");
             return false;
         }
 

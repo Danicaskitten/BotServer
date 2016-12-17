@@ -19,10 +19,9 @@ namespace MovieBot.Utility
             return plCard;
         }
 
-        public static StateReply generateWeekDayReply()
+        public static StateReply generateWeekDayReply(string replyMessage)
         {
-            string replayMessage = "These are all the possible dates in which I have found projections";
-            StateReply reply = new StateReply(false, replayMessage, "herocard");
+            StateReply reply = new StateReply(false, replyMessage, "herocard");
             string heroCardTitle = "Please select the day in which you want go to the cinema";
 
             List<CardAction> cardButtons = new List<CardAction>();

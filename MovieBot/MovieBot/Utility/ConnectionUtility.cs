@@ -1,7 +1,10 @@
 ﻿using MovieBot.Contract;
 using Newtonsoft.Json.Linq;
 using System;
+using System.IO;
 using System.Net;
+using System.Text;
+using System.Web.Script.Serialization;
 
 namespace MovieBot.Utility
 {
@@ -34,6 +37,16 @@ namespace MovieBot.Utility
                 Console.WriteLine(e.Message);
                 return null;
             }
+        }
+
+        public static T deserialise<T>(WebResponse response)
+        {
+            Stream responseStream = response.GetResponseStream();
+            StreamReader reader = new StreamReader(responseStream, Encoding.UTF8);
+            string jsonString = reader.ReadToEnd();
+            JavaScriptSerializer json_serializer = new JavaScriptSerializer();
+            T deserialized = Newtonsoft.Json.JsonConvert.DeserializeObject<T>(jsonString);
+            return deserialized;
         }
     }
 }

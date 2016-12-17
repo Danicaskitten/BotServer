@@ -4,12 +4,8 @@ using MovieBot.Utility;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
 using System.Linq;
 using System.Net;
-using System.Text;
-using System.Web;
-using System.Web.Script.Serialization;
 
 namespace MovieBot.States
 {
@@ -18,8 +14,6 @@ namespace MovieBot.States
         public string ChannelType { get; set; }
         public string UserID { get; set; }
         public Movie ChoosenMovie { get; set; }
-        public bool ChoosenCinema { get; set; }
-        public bool LocationRequested { get; set; }
         public Point locationFound { get; set; }
         public DateTime dateChoosen { get; set; }
         public int StateNum { get; set; }
@@ -66,7 +60,8 @@ namespace MovieBot.States
                     }
                 }
                 StateNum = 2;
-                StateReply reply = ReplyUtility.generateWeekDayReply();
+                string replayMessage = "These are all the possible dates in which I have found projections";
+                StateReply reply = ReplyUtility.generateWeekDayReply(replayMessage);
                 return reply;
             }
             else
@@ -74,8 +69,8 @@ namespace MovieBot.States
                 List<Location> resultList = BingMapsUtility.getLocationFromLocality(userInput);
                 if (resultList == null)
                 {
-                    string replayMessage = "I didin't found your city in the Bing database. Please, can you give me a bigger city near to your location ?";
-                    StateReply replay = new StateReply(false, replayMessage);
+                    string replyMessage = "I didin't found your city in the Bing database. Please, can you give me a bigger city near to your location ?";
+                    StateReply replay = new StateReply(false, replyMessage);
                     return replay;
                 }
                 else
@@ -89,7 +84,8 @@ namespace MovieBot.States
                             Longitude = element.Coordinates.Longitude
                         };
                         StateNum += 1;
-                        StateReply reply = ReplyUtility.generateWeekDayReply();
+                        string replyMessage = "These are all the possible dates in which I have found projections";
+                        StateReply reply = ReplyUtility.generateWeekDayReply(replyMessage);
                         return reply;
                     }
                     else
@@ -114,7 +110,7 @@ namespace MovieBot.States
                             cardButtons.Add(plButton);
                         }
 
-                        replay.HeroCard = replay.HeroCard = ReplyUtility.generateHeroCardStateReply(cardButtons, heroCardTitle, "please select one");
+                        replay.HeroCard = ReplyUtility.generateHeroCardStateReply(cardButtons, heroCardTitle, "please select one");
                         return replay;
                     }
                 }
@@ -134,12 +130,8 @@ namespace MovieBot.States
                 string request = "v2/movies/title/" + userInput +"/";
                 string urlRequest = ConnectionUtility.CreateGetRequest(request);
                 WebResponse response = ConnectionUtility.MakeRequest(urlRequest);
-                Stream responseStream = response.GetResponseStream();
-                StreamReader reader = new StreamReader(responseStream, Encoding.UTF8);
-                string jsonString = reader.ReadToEnd();
-                Console.WriteLine(jsonString);
-                JavaScriptSerializer json_serializer = new JavaScriptSerializer();
-                MovieList movieArray = Newtonsoft.Json.JsonConvert.DeserializeObject<MovieList>(jsonString);
+                MovieList movieArray = ConnectionUtility.deserialise<MovieList>(response);
+
                 if (movieArray.Data.Count != 0)
                 {
                     Movie selected_movie = movieArray.Data.First();
@@ -170,12 +162,7 @@ namespace MovieBot.States
                 string requestWithParameter = request + "/?StartDate=" + this.dateChoosen.ToString("yyyy-MM-dd") + "&EndDate=" + this.dateChoosen.AddDays(1).ToString("yyyy-MM-dd") + "&maxRange=100";
                 string urlRequest = ConnectionUtility.CreateGetRequest(requestWithParameter);
                 WebResponse response = ConnectionUtility.MakeRequest(urlRequest);
-                //TODO creare un metodo che racchiuda queste 5 righe... sono un po' troppo ripetute
-                Stream responseStream = response.GetResponseStream();
-                StreamReader reader = new StreamReader(responseStream, Encoding.UTF8);
-                string jsonString = reader.ReadToEnd();
-                JavaScriptSerializer json_serializer = new JavaScriptSerializer();
-                CinemaList cinemaArray = Newtonsoft.Json.JsonConvert.DeserializeObject<CinemaList>(jsonString);
+                CinemaList cinemaArray = ConnectionUtility.deserialise<CinemaList>(response);
 
                 if (cinemaArray.Data.Count != 0)
                 {
@@ -199,7 +186,6 @@ namespace MovieBot.States
                     }
 
                     replay.HeroCard = ReplyUtility.generateHeroCardStateReply(cardButtons, heroCardTitle, "please select one");
-                    ChoosenCinema = true;
                     StateNum = 3;
                     return replay;
                 }
@@ -225,12 +211,7 @@ namespace MovieBot.States
                 string requestWithParameter = request + "/?StartDate=" + this.dateChoosen.ToString("yyyy-MM-dd") + "&EndDate=" + this.dateChoosen.AddDays(1).ToString("yyyy-MM-dd");
                 string urlRequest = ConnectionUtility.CreateGetRequest(requestWithParameter);
                 WebResponse response = ConnectionUtility.MakeRequest(urlRequest);
-                //TODO creare un metodo che racchiuda queste 5 righe... sono un po' troppo ripetute
-                Stream responseStream = response.GetResponseStream();
-                StreamReader reader = new StreamReader(responseStream, Encoding.UTF8);
-                string jsonString = reader.ReadToEnd();
-                JavaScriptSerializer json_serializer = new JavaScriptSerializer();
-                ProjectionsList cinemaArray = Newtonsoft.Json.JsonConvert.DeserializeObject<ProjectionsList>(jsonString);
+                ProjectionsList cinemaArray = ConnectionUtility.deserialise<ProjectionsList>(response);
 
                 if (cinemaArray.Data.Count != 0)
                 {
@@ -262,7 +243,6 @@ namespace MovieBot.States
                     cardButtons.Add(plButton1);
 
                     replay.HeroCard = ReplyUtility.generateHeroCardStateReply(cardButtons, heroCardTitle, "please select one");
-                    ChoosenCinema = true;
                     StateNum = 4;
                     return replay;
                 }

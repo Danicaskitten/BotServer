@@ -1,1 +1,1 @@
-﻿{"SearchMovie":"(search movie |search movie|/searchmovie)","SearchCinema":"(search cinema |search cinema|/searchcinema)"}
+﻿{"SearchMovie":"(search movie |search movie|/searchmovie|searchmovie |searchmovie)","SearchCinema":"(search cinema |search cinema|/searchcinema|searchcinema |searchcinema)"}
