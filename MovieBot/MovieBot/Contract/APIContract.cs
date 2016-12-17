@@ -2,9 +2,20 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Runtime.Serialization;
 
-namespace MovieBot.Contract.SearchCinema
+namespace MovieBot.Contract
 {
+    public class Movie
+    {
+        public string Title { get; set; }
+        public string ImdbID { get; set; }
+        public object Poster { get; set; }
+        public object Runtime { get; set; }
+        public object Plot { get; set; }
+        public object Genre { get; set; }
+    }
+
     public class Cinema
     {
         public string Name { get; set; }
@@ -18,23 +29,26 @@ namespace MovieBot.Contract.SearchCinema
         public string City { get; set; }
     }
 
-    public class Movie
+    public class Projection
     {
-        public string Title { get; set; }
         public string ImdbID { get; set; }
-        public string Poster { get; set; }
-        public string Runtime { get; set; }
-        public string Plot { get; set; }
-        public string Genre { get; set; }
+        public int CinemaID { get; set; }
+        public string Date { get; set; }
+        public string Time { get; set; }
     }
 
-    public class MovieList
+    public class ProjectionsList
     {
-        public List<Movie> Data { get; set; }
+        public List<Projection> Data { get; set; }
     }
 
     public class CinemaList
     {
         public List<Cinema> Data { get; set; }
+    }
+
+    public class MovieList
+    {
+        public List<Movie> Data { get; set; }
     }
 }

@@ -123,8 +123,7 @@
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Contract\Bing\BingContract.cs" />
-    <Compile Include="Contract\SearchCinema\SearchCinemaContract.cs" />
-    <Compile Include="Contract\SearchMovies\SearchMovieContract.cs" />
+    <Compile Include="Contract\APIContract.cs" />
     <Compile Include="Contract\Location.cs" />
     <Compile Include="Controllers\MessagesController.cs" />
     <Compile Include="Global.asax.cs">
