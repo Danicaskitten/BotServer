@@ -1,13 +1,7 @@
 ﻿using System;
 using Microsoft.Bot.Connector;
-using System.Text.RegularExpressions;
 using MovieBot.ReplyManagers;
-using MovieBot.Utility;
-using System.Net.Http;
 using System.Threading.Tasks;
-using System.Collections.Generic;
-using System.Web.Script.Serialization;
-using System.IO;
 
 namespace MovieBot.Parser
 {
@@ -19,25 +13,16 @@ namespace MovieBot.Parser
         /// <inheritdoc />
         public override bool haveAnswer(string activityInput)
         {
-            string root = System.Web.HttpContext.Current.Server.MapPath("~");
-            string path = $"{root}{Path.DirectorySeparatorChar}Utility{Path.DirectorySeparatorChar}parser_dictionary.txt";
-            Dictionary<string,string> dict = new JavaScriptSerializer().Deserialize<Dictionary<string, string>>(File.ReadAllText(path));
-            string input = activityInput.ToLower();
-
-            foreach (KeyValuePair<string,string> entry in dict)
+            ManagerEnum enumResult = ParserUtitlity.getManagerFromInput(activityInput);
+            if (enumResult.Equals(ManagerEnum.Default))
             {
-                string pattern = entry.Value;
-                if (System.Text.RegularExpressions.Regex.IsMatch(input, pattern, System.Text.RegularExpressions.RegexOptions.IgnoreCase))
-                {
-                    string replacement = string.Empty;
-                    Regex rgx = new Regex(pattern);
-                    string result = rgx.Replace(input, replacement);
-                    ManagerEnum enumValue = StringToEnum.convertToEnum(entry.Key);
-                    this.replyManager = ReplyManagerFactory.genererateReplyManager(this.activity, result, enumValue);
-                    return true;
-                }
+                this.replyManager = ReplyManagerFactory.genererateReplyManager(activity,activityInput,enumResult);
+                return false;
             }
-            return false;
+            else
+            {
+                return true;
+            }
         }
 
         /// <inheritdoc />

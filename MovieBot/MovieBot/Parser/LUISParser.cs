@@ -6,6 +6,7 @@ using System.Web;
 using Microsoft.Bot.Connector;
 using MovieBot.Contract.LUIS;
 using MovieBot.Utility;
+using MovieBot.ReplyManagers;
 
 namespace MovieBot.Parser
 {
@@ -13,15 +14,42 @@ namespace MovieBot.Parser
     {
         public LUISParser(Activity activity, ConnectorClient connector) : base(activity, connector){}
 
-        public override Task<Activity> computeParsing()
+        public override async Task<Activity> computeParsing()
         {
-            LUISResponse response = LuisUtility.GetEntityFromLUIS(activity.Text.ToLower());
-            throw new NotImplementedException();
+            Activity reply = await this.replyManager.getResponse();
+            return reply;
         }
 
         public override bool haveAnswer(string input)
         {
-            throw new NotImplementedException();
+            LUISResponse response = LuisUtility.GetEntityFromLUIS(input);
+            string inputComputed = computeLUISOutput(response);
+            ManagerEnum enumResult = ParserUtitlity.getManagerFromInput(inputComputed);
+            if (enumResult.Equals(ManagerEnum.Default))
+            {
+                this.replyManager = ReplyManagerFactory.genererateReplyManager(activity, inputComputed, enumResult);
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+
+        private string computeLUISOutput(LUISResponse response)
+        {
+            string intent = response.topScoringIntent.intent;
+            List<Contract.LUIS.Entity> entities = response.entities;
+            string input = entities.First().entity;
+
+            switch (intent)
+            {
+                case "SearchMovie":
+                    string newUserInput = "search movie " + input;
+                    return newUserInput;
+            }
+
+            return "";
         }
     }
 }
