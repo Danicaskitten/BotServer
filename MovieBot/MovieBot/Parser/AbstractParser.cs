@@ -5,14 +5,17 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using MovieBot.ReplyManagers;
-
+using System.Web.Script.Serialization;
+using System.IO;
+using System.Text.RegularExpressions;
+using MovieBot.Utility;
 
 namespace MovieBot.Parser
 {
     /// <summary>
     /// This abstract class is the model for all the parser in this project
     /// </summary>
-    public abstract class Parser
+    public abstract class AbstractParser
     {
         protected Activity activity;
         protected ConnectorClient connector;
@@ -23,7 +26,7 @@ namespace MovieBot.Parser
         /// </summary>
         /// <param name="activity">User Activity</param>
         /// <param name="connector">Generated ConnectorClient</param>
-        public Parser(Activity activity, ConnectorClient connector)
+        public AbstractParser(Activity activity, ConnectorClient connector)
         {
             this.activity = activity;
             this.connector = connector;
@@ -42,5 +45,27 @@ namespace MovieBot.Parser
         /// <param name="input">Message sent by the user</param>
         /// <returns>Returns True if it can handle the message or Flase on the contrary</returns>
         public abstract Boolean haveAnswer(string input);
+
+        protected ManagerEnum getManagerFromInput(string input)
+        {
+            string root = System.Web.HttpContext.Current.Server.MapPath("~");
+            string path = $"{root}{Path.DirectorySeparatorChar}Utility{Path.DirectorySeparatorChar}parser_dictionary.txt";
+            Dictionary<string, string> dict = new JavaScriptSerializer().Deserialize<Dictionary<string, string>>(File.ReadAllText(path));
+            string lowerInput = input.ToLower();
+
+            foreach (KeyValuePair<string, string> entry in dict)
+            {
+                string pattern = entry.Value;
+                if (System.Text.RegularExpressions.Regex.IsMatch(lowerInput, pattern, System.Text.RegularExpressions.RegexOptions.IgnoreCase))
+                {
+                    string replacement = string.Empty;
+                    Regex rgx = new Regex(pattern);
+                    string result = rgx.Replace(lowerInput, replacement);
+                    ManagerEnum enumValue = StringToEnum.convertToEnum(entry.Key);
+                    return enumValue;
+                }
+            }
+            return ManagerEnum.Default;
+        }
     }
 }

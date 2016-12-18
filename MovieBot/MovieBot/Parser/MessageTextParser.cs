@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace MovieBot.Parser
 {
-    public class MessageTextParser : Parser
+    public class MessageTextParser : AbstractParser
     {
         /// <inheritdoc />
         public MessageTextParser(Activity activity, ConnectorClient connector) : base(activity, connector){}
@@ -13,7 +13,7 @@ namespace MovieBot.Parser
         /// <inheritdoc />
         public override bool haveAnswer(string activityInput)
         {
-            ManagerEnum enumResult = ParserUtitlity.getManagerFromInput(activityInput);
+            ManagerEnum enumResult = getManagerFromInput(activityInput);
             if (enumResult.Equals(ManagerEnum.Default))
             {
                 this.replyManager = ReplyManagerFactory.genererateReplyManager(activity,activityInput,enumResult);

@@ -8,7 +8,7 @@ using MovieBot.ReplyManagers;
 
 namespace MovieBot.Parser
 {
-    public class LUISParser : Parser
+    public class LUISParser : AbstractParser
     {
         public LUISParser(Activity activity, ConnectorClient connector) : base(activity, connector){}
 
@@ -22,7 +22,7 @@ namespace MovieBot.Parser
         {
             LUISResponse response = LuisUtility.GetEntityFromLUIS(input);
             string inputComputed = computeLUISOutput(response);
-            ManagerEnum enumResult = ParserUtitlity.getManagerFromInput(inputComputed);
+            ManagerEnum enumResult = getManagerFromInput(inputComputed);
             if (enumResult.Equals(ManagerEnum.Default))
             {
                 this.replyManager = ReplyManagerFactory.genererateReplyManager(activity, inputComputed, enumResult);

@@ -25,16 +25,21 @@ namespace MovieBot
             if (activity.Type == ActivityTypes.Message)
             {
                 //TODO add the LUIS parser (magari fare un bel ciclo)
-                Parser.Parser parser = new MessageTextParser(activity, connector);
+                AbstractParser parserText = new MessageTextParser(activity, connector);
+                AbstractParser parserLUIS = new LUISParser(activity, connector);
                 MessageStateParser stateParser = new MessageStateParser(activity, connector);
                 Activity reply;
-                if (parser.haveAnswer(activity.Text.ToLower()))
+                if (parserText.haveAnswer(activity.Text.ToLower()))
                 {
-                    reply = await parser.computeParsing();
+                    reply = await parserText.computeParsing();
                 }
                 else if (await stateParser.haveAnswer(activity.Text.ToLower()))
                 {
                     reply = stateParser.computeParsing();
+                }
+                else if (parserLUIS.haveAnswer(activity.Text.ToLower())
+                {
+                    reply = await parserLUIS.computeParsing();
                 }
                 else
                 {

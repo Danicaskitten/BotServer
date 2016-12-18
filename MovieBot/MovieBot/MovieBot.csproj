@@ -131,7 +131,6 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Parser\LUISParser.cs" />
-    <Compile Include="Parser\ParserUtitlity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReplyManagers\ManagerEnum.cs" />
     <Compile Include="ReplyManagers\ReplyManager.cs" />
@@ -146,7 +145,7 @@
     <Compile Include="Utility\ConnectionUtility.cs" />
     <Compile Include="Parser\MessageStateParser.cs" />
     <Compile Include="Parser\MessageTextParser.cs" />
-    <Compile Include="Parser\Parser.cs" />
+    <Compile Include="Parser\AbstractParser.cs" />
     <Compile Include="Utility\LuisUtility.cs" />
     <Compile Include="Utility\ReplyUtility.cs" />
     <Compile Include="Utility\StateReply.cs" />
