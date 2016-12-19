@@ -41,18 +41,22 @@ namespace MovieBot.Parser
             string intent = response.topScoringIntent.intent;
             List<Contract.LUIS.Entity> entities = response.entities;
             string input = entities.First().entity;
+            string newUserInput = "";
 
             switch (intent)
             {
                 case "SearchMovie":
-                    string newUserInput = "search movie " + input;
-                    return newUserInput;
+                    newUserInput = "search movie " + input;
+                    break;
                 case "SearchCinema":
-                    string newUserInput2 = "search cinema " + input;
-                    return newUserInput2;
+                    newUserInput = "search cinema " + input;
+                    break;
+                case "Help":
+                    newUserInput = "help";
+                    break;
             }
 
-            return "";
+            return newUserInput;
         }
     }
 }
