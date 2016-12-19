@@ -70,11 +70,25 @@ namespace MovieBot.Parser
                     return innerReturnValue;
                 }
             }
-            ParserObject returnValue = new ParserObject
+
+            ParserObject returnValue = new ParserObject();
+
+            if (lowerInput.Contains("help"))
             {
-                ParsedInput = input,
-                ReplyManagerEnum = ManagerEnum.Default
-            };
+                returnValue = new ParserObject
+                {
+                    ParsedInput = input,
+                    ReplyManagerEnum = ManagerEnum.Help
+                };
+            }
+            else
+            {
+                returnValue = new ParserObject
+                {
+                    ParsedInput = input,
+                    ReplyManagerEnum = ManagerEnum.Default
+                };
+            }
             return returnValue;
         }
     }

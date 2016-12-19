@@ -12,7 +12,7 @@ namespace MovieBot.ReplyManagers
         public override async Task<Activity> getResponse()
         {
             string root = System.Web.HttpContext.Current.Server.MapPath("~");
-            string start_message = System.IO.File.ReadAllText($"{root}{Path.DirectorySeparatorChar}StandardReplies{Path.DirectorySeparatorChar}start_message.txt");
+            string start_message = System.IO.File.ReadAllText($"{root}{Path.DirectorySeparatorChar}StandardReplies{Path.DirectorySeparatorChar}help_message.txt");
             Activity reply = activity.CreateReply(start_message);
             await Task.Delay(1);
             return reply;

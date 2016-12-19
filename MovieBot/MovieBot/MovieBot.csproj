@@ -114,6 +114,7 @@
   <ItemGroup>
     <Content Include="default.htm" />
     <Content Include="Global.asax" />
+    <Content Include="StandardReplies\help_message.txt" />
     <Content Include="StandardReplies\start_message.txt" />
     <Content Include="Parser\parser_dictionary.txt" />
     <Content Include="Web.config">
