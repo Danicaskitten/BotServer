@@ -1,13 +1,13 @@
-﻿using System;
+﻿using Microsoft.Bot.Connector;
+using System;
 using System.IO;
 using System.Threading.Tasks;
-using Microsoft.Bot.Connector;
 
 namespace MovieBot.ReplyManagers
 {
-    public class StartMessageReplyManager : ReplyManager
+    public class HelpReplyManager : ReplyManager
     {
-        public StartMessageReplyManager(Activity activity, string input) : base(activity, input) { }
+        public HelpReplyManager(Activity activity, string input) : base(activity, input) { }
 
         public override async Task<Activity> getResponse()
         {
