@@ -22,14 +22,16 @@ namespace MovieBot.Parser
         {
             LUISResponse response = LuisUtility.GetEntityFromLUIS(input);
             string inputComputed = computeLUISOutput(response);
-            ManagerEnum enumResult = getManagerFromInput(inputComputed);
+            ParserObject parsed = getManagerFromInput(inputComputed);
+            ManagerEnum enumResult = parsed.ReplyManagerEnum;
+            string parsedInput = parsed.ParsedInput;
             if (enumResult.Equals(ManagerEnum.Default))
             {
-                this.replyManager = ReplyManagerFactory.genererateReplyManager(activity, inputComputed, enumResult);
                 return false;
             }
             else
             {
+                this.replyManager = ReplyManagerFactory.genererateReplyManager(activity, parsedInput, enumResult);
                 return true;
             }
         }
@@ -45,6 +47,9 @@ namespace MovieBot.Parser
                 case "SearchMovie":
                     string newUserInput = "search movie " + input;
                     return newUserInput;
+                case "SearchCinema":
+                    string newUserInput2 = "search cinema " + input;
+                    return newUserInput2;
             }
 
             return "";

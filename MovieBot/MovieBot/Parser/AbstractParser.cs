@@ -46,10 +46,10 @@ namespace MovieBot.Parser
         /// <returns>Returns True if it can handle the message or Flase on the contrary</returns>
         public abstract Boolean haveAnswer(string input);
 
-        protected ManagerEnum getManagerFromInput(string input)
+        protected ParserObject getManagerFromInput(string input)
         {
             string root = System.Web.HttpContext.Current.Server.MapPath("~");
-            string path = $"{root}{Path.DirectorySeparatorChar}Utility{Path.DirectorySeparatorChar}parser_dictionary.txt";
+            string path = $"{root}{Path.DirectorySeparatorChar}Parser{Path.DirectorySeparatorChar}parser_dictionary.txt";
             Dictionary<string, string> dict = new JavaScriptSerializer().Deserialize<Dictionary<string, string>>(File.ReadAllText(path));
             string lowerInput = input.ToLower();
 
@@ -62,10 +62,20 @@ namespace MovieBot.Parser
                     Regex rgx = new Regex(pattern);
                     string result = rgx.Replace(lowerInput, replacement);
                     ManagerEnum enumValue = StringToEnum.convertToEnum(entry.Key);
-                    return enumValue;
+                    ParserObject innerReturnValue = new ParserObject
+                    {
+                        ParsedInput = result,
+                        ReplyManagerEnum = enumValue
+                    };
+                    return innerReturnValue;
                 }
             }
-            return ManagerEnum.Default;
+            ParserObject returnValue = new ParserObject
+            {
+                ParsedInput = input,
+                ReplyManagerEnum = ManagerEnum.Default
+            };
+            return returnValue;
         }
     }
 }

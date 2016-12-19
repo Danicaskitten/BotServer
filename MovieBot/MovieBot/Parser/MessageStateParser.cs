@@ -46,7 +46,7 @@ namespace MovieBot.Parser
             StateClient stateClient = activity.GetStateClient();
             BotData userData = await stateClient.BotState.GetUserDataAsync(activity.ChannelId, activity.From.Id);
             string root = System.Web.HttpContext.Current.Server.MapPath("~");
-            string path = $"{root}{Path.DirectorySeparatorChar}Utility{Path.DirectorySeparatorChar}parser_dictionary.txt";
+            string path = $"{root}{Path.DirectorySeparatorChar}Parser{Path.DirectorySeparatorChar}parser_dictionary.txt";
             Dictionary<string, string> dict = new JavaScriptSerializer().Deserialize<Dictionary<string, string>>(File.ReadAllText(path));
             string input = activityInput.ToLower();
 

@@ -13,14 +13,16 @@ namespace MovieBot.Parser
         /// <inheritdoc />
         public override bool haveAnswer(string activityInput)
         {
-            ManagerEnum enumResult = getManagerFromInput(activityInput);
+            ParserObject parsed = getManagerFromInput(activityInput);
+            ManagerEnum enumResult = parsed.ReplyManagerEnum;
+            string parsedInput = parsed.ParsedInput;
             if (enumResult.Equals(ManagerEnum.Default))
             {
-                this.replyManager = ReplyManagerFactory.genererateReplyManager(activity,activityInput,enumResult);
                 return false;
             }
             else
             {
+                this.replyManager = ReplyManagerFactory.genererateReplyManager(activity, parsedInput, enumResult);
                 return true;
             }
         }

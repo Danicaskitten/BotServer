@@ -37,7 +37,7 @@ namespace MovieBot
                 {
                     reply = stateParser.computeParsing();
                 }
-                else if (parserLUIS.haveAnswer(activity.Text.ToLower())
+                else if (parserLUIS.haveAnswer(activity.Text.ToLower()))
                 {
                     reply = await parserLUIS.computeParsing();
                 }
