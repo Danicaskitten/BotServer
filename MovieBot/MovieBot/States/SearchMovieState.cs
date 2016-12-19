@@ -44,6 +44,39 @@ namespace MovieBot.States
             }
         }
 
+        private StateReply stateZero(string userInput)
+        {
+            if (string.IsNullOrEmpty(userInput))
+            {
+                string replayMessage = "Cool! Tell me which film do you like to see";
+                StateReply replay = new StateReply(false, replayMessage);
+                return replay;
+            }
+            else
+            {
+                string request = "v2/movies/title/" + userInput +"/";
+                string urlRequest = ConnectionUtility.CreateGetRequest(request);
+                WebResponse response = ConnectionUtility.MakeRequest(urlRequest);
+                MovieList movieArray = ConnectionUtility.deserialise<MovieList>(response);
+
+                if (movieArray.Data.Count != 0)
+                {
+                    Movie selected_movie = movieArray.Data.First();
+                    this.ChoosenMovie = selected_movie;
+                    string replayMessage = "Perfect ! I've found that " + this.ChoosenMovie.Title + " is now in the cinema. Write me your city and I will provide you all the projections near to you";
+                    StateReply replay = new StateReply(false, replayMessage);
+                    StateNum = 1;
+                    return replay;
+                }
+                else
+                {
+                    string replayMessage = "I did not found any available movies with that title. Please try with another one.";
+                    StateReply replay = new StateReply(false, replayMessage);
+                    return replay;
+                }
+            }
+        }
+
         private StateReply stateOne(string userInput)
         {
             if (userInput.Contains("selectedlocation="))
@@ -70,7 +103,7 @@ namespace MovieBot.States
                 List<Location> resultList = BingMapsUtility.getLocationFromLocality(userInput);
                 if (resultList == null)
                 {
-                    string replyMessage = "I didin't found your city in the Bing database. Please, can you give me a bigger city near to your location ?";
+                    string replyMessage = "What a pity ! I did not found your city in the Bing database. Please, can you give me a bigger city near to your location ?";
                     StateReply replay = new StateReply(false, replyMessage);
                     return replay;
                 }
@@ -92,9 +125,9 @@ namespace MovieBot.States
                     else
                     {
                         this.locationList = resultList;
-                        string replayMessage = "These are all the city that I've found. Please click only one choice";
+                        string replayMessage = "These are all the cities that match your request";
                         StateReply replay = new StateReply(false, replayMessage, "herocard");
-                        string heroCardTitle = "Select your city";
+                        string heroCardTitle = "Please select your city";
 
                         List<CardAction> cardButtons = new List<CardAction>();
 
@@ -118,39 +151,6 @@ namespace MovieBot.States
             }
         }
 
-        private StateReply stateZero(string userInput)
-        {
-            if (string.IsNullOrEmpty(userInput))
-            {
-                string replayMessage = "Cool! Tell me which film do you like to see";
-                StateReply replay = new StateReply(false, replayMessage);
-                return replay;
-            }
-            else
-            {
-                string request = "v2/movies/title/" + userInput +"/";
-                string urlRequest = ConnectionUtility.CreateGetRequest(request);
-                WebResponse response = ConnectionUtility.MakeRequest(urlRequest);
-                MovieList movieArray = ConnectionUtility.deserialise<MovieList>(response);
-
-                if (movieArray.Data.Count != 0)
-                {
-                    Movie selected_movie = movieArray.Data.First();
-                    this.ChoosenMovie = selected_movie;
-                    string replayMessage = "Yai ! I've found that " + this.ChoosenMovie.Title + " is now in the cinemas. Write me your city  and I will provide you all the near projections ";
-                    StateReply replay = new StateReply(false, replayMessage);
-                    StateNum = 1;
-                    return replay;
-                }
-                else
-                {
-                    string replayMessage = "I didin't found any available movies with that title. Please try with another one.";
-                    StateReply replay = new StateReply(false, replayMessage);
-                    return replay;
-                }
-            }
-        }
-
         private StateReply stateTwo(string userInput)
         {
             if (userInput.Contains("selectedday="))
@@ -167,9 +167,9 @@ namespace MovieBot.States
 
                 if (cinemaArray.Data.Count != 0)
                 {
-                    string replayMessage = "These are all the cinemas where your movie is available. Please select only one choice";
+                    string replayMessage = "This is the list of cinema where your movie is available. Please select your favorite one";
                     StateReply replay = new StateReply(false, replayMessage, "herocard");
-                    string heroCardTitle = "These are all the cinemas";
+                    string heroCardTitle = "Here they are!";
 
                     List<CardAction> cardButtons = new List<CardAction>();
 
@@ -186,13 +186,13 @@ namespace MovieBot.States
                         cardButtons.Add(plButton);
                     }
 
-                    replay.HeroCard = ReplyUtility.generateHeroCardStateReply(cardButtons, heroCardTitle, "please select one");
+                    replay.HeroCard = ReplyUtility.generateHeroCardStateReply(cardButtons, heroCardTitle, "Please select one option");
                     StateNum = 3;
                     return replay;
                 }
                 else
                 {
-                    string replayMessage = "I didin't found any cinemas in my database. Please restart againg the search movie with a new title";
+                    string replayMessage = "I did not found any cinema in my database. Please restart againg the search movie with a new title";
                     StateReply replay = new StateReply(true, replayMessage);
                     return replay;
                 }
@@ -216,9 +216,9 @@ namespace MovieBot.States
 
                 if (cinemaArray.Data.Count != 0)
                 {
-                    string replayMessage = "These are all the projections that I've found. If you wanna go back in the cinema selection press back button";
+                    string replayMessage = "These are all the projections that I have found. If you want to return in the cinema selection select the back option";
                     StateReply replay = new StateReply(false, replayMessage, "herocard");
-                    string heroCardTitle = "These are all the projections";
+                    string heroCardTitle = "Here they are!";
 
                     List<CardAction> cardButtons = new List<CardAction>();
 
@@ -243,7 +243,7 @@ namespace MovieBot.States
                     };
                     cardButtons.Add(plButton1);
 
-                    replay.HeroCard = ReplyUtility.generateHeroCardStateReply(cardButtons, heroCardTitle, "please select one");
+                    replay.HeroCard = ReplyUtility.generateHeroCardStateReply(cardButtons, heroCardTitle, "Please select your favorite one");
                     StateNum = 4;
                     return replay;
                 }

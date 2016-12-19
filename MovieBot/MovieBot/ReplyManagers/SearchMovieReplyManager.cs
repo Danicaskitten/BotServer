@@ -44,7 +44,7 @@ namespace MovieBot.ReplyManagers
             }
             else
             {
-                Activity replyToConversation = activity.CreateReply("Something went wrong in the message parsing, please try to restart your request");
+                Activity replyToConversation = activity.CreateReply("Something went wrong in the parsing of your last message. Please try restarting your request");
                 return replyToConversation;
             }
         }
