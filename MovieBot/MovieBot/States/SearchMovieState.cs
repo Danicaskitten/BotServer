@@ -1,5 +1,6 @@
 ﻿using Microsoft.Bot.Connector;
 using MovieBot.Contract;
+using MovieBot.Parser;
 using MovieBot.Utility;
 using System;
 using System.Collections.Generic;

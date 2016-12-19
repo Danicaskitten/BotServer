@@ -1,11 +1,12 @@
 ﻿using Microsoft.Bot.Connector;
 using MovieBot.States;
-using MovieBot.Utility;
+using MovieBot.Parser;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
+using MovieBot.Utility;
 
 namespace MovieBot.ReplyManagers
 {

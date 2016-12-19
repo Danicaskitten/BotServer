@@ -8,7 +8,7 @@ using System.Web.Http.Description;
 using Microsoft.Bot.Connector;
 using Newtonsoft.Json;
 using MovieBot.ReplyManagers;
-using MovieBot.Utility;
+using MovieBot.Parser;
 
 namespace MovieBot
 {
@@ -24,16 +24,22 @@ namespace MovieBot
             ConnectorClient connector = new ConnectorClient(new Uri(activity.ServiceUrl));
             if (activity.Type == ActivityTypes.Message)
             {
-                Parser parser = new MessageTextParser(activity, connector);
+                //TODO add the LUIS parser (magari fare un bel ciclo)
+                AbstractParser parserText = new MessageTextParser(activity, connector);
+                AbstractParser parserLUIS = new LUISParser(activity, connector);
                 MessageStateParser stateParser = new MessageStateParser(activity, connector);
                 Activity reply;
-                if (parser.haveAnswer(activity.Text.ToLower()))
+                if (parserText.haveAnswer(activity.Text.ToLower()))
                 {
-                    reply = await parser.computeParsing();
+                    reply = await parserText.computeParsing();
                 }
                 else if (await stateParser.haveAnswer(activity.Text.ToLower()))
                 {
                     reply = stateParser.computeParsing();
+                }
+                else if (parserLUIS.haveAnswer(activity.Text.ToLower()))
+                {
+                    reply = await parserLUIS.computeParsing();
                 }
                 else
                 {

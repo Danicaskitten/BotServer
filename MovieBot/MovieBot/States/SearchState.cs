@@ -1,4 +1,5 @@
-﻿using MovieBot.Utility;
+﻿using MovieBot.Parser;
+using MovieBot.Utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;

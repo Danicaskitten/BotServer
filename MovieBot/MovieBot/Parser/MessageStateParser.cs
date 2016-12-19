@@ -1,6 +1,7 @@
 ﻿using Microsoft.Bot.Connector;
 using MovieBot.ReplyManagers;
 using MovieBot.States;
+using MovieBot.Utility;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Script.Serialization;
 
-namespace MovieBot.Utility
+namespace MovieBot.Parser
 {
     public class MessageStateParser
     {
@@ -45,7 +46,7 @@ namespace MovieBot.Utility
             StateClient stateClient = activity.GetStateClient();
             BotData userData = await stateClient.BotState.GetUserDataAsync(activity.ChannelId, activity.From.Id);
             string root = System.Web.HttpContext.Current.Server.MapPath("~");
-            string path = $"{root}{Path.DirectorySeparatorChar}Utility{Path.DirectorySeparatorChar}parser_dictionary.txt";
+            string path = $"{root}{Path.DirectorySeparatorChar}Parser{Path.DirectorySeparatorChar}parser_dictionary.txt";
             Dictionary<string, string> dict = new JavaScriptSerializer().Deserialize<Dictionary<string, string>>(File.ReadAllText(path));
             string input = activityInput.ToLower();
 
