@@ -208,7 +208,7 @@ namespace MovieBot.States
             if (userInput.Contains("cinemaselected="))
             {
                 string selectedCinemaID = userInput.Replace("cinemaselected=", String.Empty);
-                string request = "v2/projections/list/"+ this.ChoosenMovie.ImdbID + "/" + selectedCinemaID;
+                string request = "v2/projections/list/"+ ChoosenMovie.ImdbID + "/" + selectedCinemaID;
                 string requestWithParameter = request + "/?StartDate=" + this.dateChoosen.ToString("yyyy-MM-dd") + "&EndDate=" + this.dateChoosen.AddDays(1).ToString("yyyy-MM-dd");
                 string urlRequest = ConnectionUtility.CreateGetRequest(requestWithParameter);
                 WebResponse response = ConnectionUtility.MakeRequest(urlRequest);
