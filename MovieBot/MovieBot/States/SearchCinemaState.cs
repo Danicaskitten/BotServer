@@ -45,7 +45,7 @@ namespace MovieBot.States
         {
             if (string.IsNullOrEmpty(userInput))
             {
-                string replayMessage = "Fantastic! Tell me in which cinema do you like to go";
+                string replayMessage = "Fantastic! Tell me in which cinema you would like to go";
                 StateReply replay = new StateReply(false, replayMessage);
                 return replay;
             }
@@ -81,14 +81,14 @@ namespace MovieBot.States
                                 cardButtons.Add(plButton);
                             }
 
-                            replay.HeroCard = ReplyUtility.generateHeroCardStateReply(cardButtons, heroCardTitle, "please select one");
+                            replay.HeroCard = ReplyUtility.generateHeroCardStateReply(cardButtons, heroCardTitle, "Please select one");
                             return replay;
                         }
                         else
                         {
                             Cinema selectedCinema = cinemaArray.Data.First();
                             this.ChoosenCinema = selectedCinema;
-                            string replyMessage = "Great ! I've found " + this.ChoosenCinema.Name + ". When do you want to go?";
+                            string replyMessage = "Great ! I have found " + this.ChoosenCinema.Name + ". When do you want to go?";
                             StateReply reply = ReplyUtility.generateWeekDayReply(replyMessage);
                             StateNum = 1;
                             return reply;
@@ -96,7 +96,7 @@ namespace MovieBot.States
                     }
                     else
                     {
-                        string replayMessage = "I did not found any cinema that match your input. Please try with another name.";
+                        string replayMessage = "I did not find any cinema that matches your input. Please try with another name.";
                         StateReply replay = new StateReply(false, replayMessage);
                         return replay;
                     }
@@ -155,7 +155,7 @@ namespace MovieBot.States
                         cardButtons.Add(plButton);
                     }
 
-                    replay.HeroCard = ReplyUtility.generateHeroCardStateReply(cardButtons, heroCardTitle, "please select one");
+                    replay.HeroCard = ReplyUtility.generateHeroCardStateReply(cardButtons, heroCardTitle, "Please select one");
                     StateNum = 2;
                     return replay;
                 }
@@ -177,7 +177,7 @@ namespace MovieBot.States
             if (userInput.Contains("movieselected="))
             {
                 string selectedMovieID = userInput.Replace("movieselected=", String.Empty);
-                string request = "v2/projections/list/" + ChoosenCinema.CinemaID + "/" + selectedMovieID;
+                string request = "v2/projections/list/" + selectedMovieID + "/" + ChoosenCinema.CinemaID;
                 string requestWithParameter = request + "/?StartDate=" + this.dateChoosen.ToString("yyyy-MM-dd") + "&EndDate=" + this.dateChoosen.AddDays(1).ToString("yyyy-MM-dd");
                 string urlRequest = ConnectionUtility.CreateGetRequest(requestWithParameter);
                 WebResponse response = ConnectionUtility.MakeRequest(urlRequest);

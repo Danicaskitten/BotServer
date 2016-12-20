@@ -48,7 +48,7 @@ namespace MovieBot.States
         {
             if (string.IsNullOrEmpty(userInput))
             {
-                string replayMessage = "Cool! Tell me which film do you like to see";
+                string replayMessage = "Cool! Tell me which film you would like to see";
                 StateReply replay = new StateReply(false, replayMessage);
                 return replay;
             }
@@ -63,14 +63,14 @@ namespace MovieBot.States
                 {
                     Movie selected_movie = movieArray.Data.First();
                     this.ChoosenMovie = selected_movie;
-                    string replayMessage = "Perfect ! I've found that " + this.ChoosenMovie.Title + " is now in the cinema. Write me your city and I will provide you all the projections near to you";
+                    string replayMessage = "Perfect ! I've found that " + this.ChoosenMovie.Title + " is now in the cinema. Write me your city and I will provide you all the projections near you";
                     StateReply replay = new StateReply(false, replayMessage);
                     StateNum = 1;
                     return replay;
                 }
                 else
                 {
-                    string replayMessage = "I did not found any available movies with that title. Please try with another one.";
+                    string replayMessage = "I did not find any available movie with that title. Please try with another one.";
                     StateReply replay = new StateReply(false, replayMessage);
                     return replay;
                 }
@@ -94,7 +94,7 @@ namespace MovieBot.States
                     }
                 }
                 StateNum = 2;
-                string replayMessage = "These are all the possible dates in which I have found projections";
+                string replayMessage = "Please tell me when you want to go to the cinema";
                 StateReply reply = ReplyUtility.generateWeekDayReply(replayMessage);
                 return reply;
             }
@@ -103,7 +103,7 @@ namespace MovieBot.States
                 List<Location> resultList = BingMapsUtility.getLocationFromLocality(userInput);
                 if (resultList == null)
                 {
-                    string replyMessage = "What a pity ! I did not found your city in the Bing database. Please, can you give me a bigger city near to your location ?";
+                    string replyMessage = "What a pity ! I did not find your city in the Bing database. Please, can you give me a bigger city near your location ?";
                     StateReply replay = new StateReply(false, replyMessage);
                     return replay;
                 }
@@ -118,7 +118,7 @@ namespace MovieBot.States
                             Longitude = element.Coordinates.Longitude
                         };
                         StateNum += 1;
-                        string replyMessage = "These are all the possible dates in which I have found projections";
+                        string replyMessage = "Please tell me when you want to go to the cinema";
                         StateReply reply = ReplyUtility.generateWeekDayReply(replyMessage);
                         return reply;
                     }
@@ -192,7 +192,7 @@ namespace MovieBot.States
                 }
                 else
                 {
-                    string replayMessage = "I did not found any cinema in my database. Please restart againg the search movie with a new title";
+                    string replayMessage = "I did not find any cinema in my database. Please make a new search with a new title";
                     StateReply replay = new StateReply(true, replayMessage);
                     return replay;
                 }
@@ -208,7 +208,7 @@ namespace MovieBot.States
             if (userInput.Contains("cinemaselected="))
             {
                 string selectedCinemaID = userInput.Replace("cinemaselected=", String.Empty);
-                string request = "v2/projections/list/"+selectedCinemaID+"/" + this.ChoosenMovie.ImdbID;
+                string request = "v2/projections/list/"+ this.ChoosenMovie.ImdbID + "/" + selectedCinemaID;
                 string requestWithParameter = request + "/?StartDate=" + this.dateChoosen.ToString("yyyy-MM-dd") + "&EndDate=" + this.dateChoosen.AddDays(1).ToString("yyyy-MM-dd");
                 string urlRequest = ConnectionUtility.CreateGetRequest(requestWithParameter);
                 WebResponse response = ConnectionUtility.MakeRequest(urlRequest);
