@@ -22,7 +22,7 @@ namespace MovieBot.Utility
         public static StateReply generateWeekDayReply(string replyMessage)
         {
             StateReply reply = new StateReply(false, replyMessage, "herocard");
-            string heroCardTitle = "Please select the day in which you want go to the cinema";
+            string heroCardTitle = "These are the possible dates";
 
             List<CardAction> cardButtons = new List<CardAction>();
             DateTime today = DateTime.Today;
