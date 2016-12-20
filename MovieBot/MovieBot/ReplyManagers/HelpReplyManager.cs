@@ -1,18 +1,18 @@
-﻿using System;
+﻿using Microsoft.Bot.Connector;
+using System;
 using System.IO;
 using System.Threading.Tasks;
-using Microsoft.Bot.Connector;
 
 namespace MovieBot.ReplyManagers
 {
-    public class StartMessageReplyManager : ReplyManager
+    public class HelpReplyManager : ReplyManager
     {
-        public StartMessageReplyManager(Activity activity, string input) : base(activity, input) { }
+        public HelpReplyManager(Activity activity, string input) : base(activity, input) { }
 
         public override async Task<Activity> getResponse()
         {
             string root = System.Web.HttpContext.Current.Server.MapPath("~");
-            string start_message = System.IO.File.ReadAllText($"{root}{Path.DirectorySeparatorChar}StandardReplies{Path.DirectorySeparatorChar}start_message.txt");
+            string start_message = System.IO.File.ReadAllText($"{root}{Path.DirectorySeparatorChar}StandardReplies{Path.DirectorySeparatorChar}help_message.txt");
             Activity reply = activity.CreateReply(start_message);
             await Task.Delay(1);
             return reply;

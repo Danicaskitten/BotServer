@@ -114,6 +114,7 @@
   <ItemGroup>
     <Content Include="default.htm" />
     <Content Include="Global.asax" />
+    <Content Include="StandardReplies\help_message.txt" />
     <Content Include="StandardReplies\start_message.txt" />
     <Content Include="Parser\parser_dictionary.txt" />
     <Content Include="Web.config">
@@ -133,6 +134,7 @@
     <Compile Include="Parser\LUISParser.cs" />
     <Compile Include="Parser\ParserObject.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReplyManagers\HelpReplyManager.cs" />
     <Compile Include="ReplyManagers\ManagerEnum.cs" />
     <Compile Include="ReplyManagers\ReplyManager.cs" />
     <Compile Include="ReplyManagers\ReplyManagerFactory.cs" />

@@ -43,7 +43,7 @@ namespace MovieBot
                 }
                 else
                 {
-                    reply = activity.CreateReply("Sorry, I don't understand your request, please write me Help in order to my functionalities");
+                    reply = activity.CreateReply("Sorry, I did not understand your request. Please ask me for Help in order to know my functionalities");
                 } 
                 APIResponse result = await connector.Conversations.ReplyToActivityAsync(reply);
             }

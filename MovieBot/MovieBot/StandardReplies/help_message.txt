@@ -1,6 +1,4 @@
-﻿*Hello fellow moviegoer!*	
-
-I am **MovieBot** and I will guide you to the achievement of **the best cinema experience!**
+﻿Here I am with some useful advices that I hope will help you to enjoy my fellowship
 
 I can help you to find a specific movie or cinema and to make a reservation in zero time .
 
@@ -14,10 +12,6 @@ Here is the list of the commands that I understand:
 2.	**SearchCinema [name] or Search Cinema [name]**
 
 	I will discover what movies are displayed in the cinema that you want and I will help you to make a reservation for the movie that you choose.
-
-3.	**Ask me for help**
-
-	I will provide you all the information that you need 
 
 I will show you the list of the commands that I understand, so that we can get on better and I can be more helpful in your experience
 

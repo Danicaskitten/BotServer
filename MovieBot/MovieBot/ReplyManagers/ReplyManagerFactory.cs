@@ -17,6 +17,8 @@ namespace MovieBot.ReplyManagers
                     return new SearchMovieReplyManager(activity, input);
                 case ManagerEnum.SearchCinema:
                     return new SearchCinemaReplyManager(activity, input);
+                case ManagerEnum.Help:
+                    return new HelpReplyManager(activity, input);
                 default:
                     return null;
             }

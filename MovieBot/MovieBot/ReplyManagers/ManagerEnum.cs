@@ -9,6 +9,7 @@ namespace MovieBot.ReplyManagers
     {
         SearchMovie,
         SearchCinema,
+        Help,
         Default
     }
 }

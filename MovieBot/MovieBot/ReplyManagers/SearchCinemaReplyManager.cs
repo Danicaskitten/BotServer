@@ -57,7 +57,7 @@ namespace MovieBot.ReplyManagers
             }
             else
             {
-                Activity replyToConversation = activity.CreateReply("Something went wrong in the message parsing, please try to restart your request");
+                Activity replyToConversation = activity.CreateReply("Something went wrong in the parsing of your last message. Please try sending again your request");
                 return replyToConversation;
             }
             
@@ -108,7 +108,7 @@ namespace MovieBot.ReplyManagers
             }
             else
             {
-                Activity replyToConversation = activity.CreateReply("I'm so sorry, I didn't manage to process your reqeust");
+                Activity replyToConversation = activity.CreateReply("I'm so sorry, I didn't manage to process your request");
                 return replyToConversation;
             }
         }

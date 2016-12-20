@@ -40,7 +40,7 @@ namespace MovieBot.Utility
                 };
                 cardButtons.Add(plButton);
             }
-            reply.HeroCard = ReplyUtility.generateHeroCardStateReply(cardButtons, heroCardTitle, "please select one");
+            reply.HeroCard = ReplyUtility.generateHeroCardStateReply(cardButtons, heroCardTitle, "Please select one option");
             return reply;
         }
     }

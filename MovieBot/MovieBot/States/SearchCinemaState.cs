@@ -45,7 +45,7 @@ namespace MovieBot.States
         {
             if (string.IsNullOrEmpty(userInput))
             {
-                string replayMessage = "Cool! Tell me in which cinema do you like to go";
+                string replayMessage = "Fantastic! Tell me in which cinema you would like to go";
                 StateReply replay = new StateReply(false, replayMessage);
                 return replay;
             }
@@ -62,7 +62,7 @@ namespace MovieBot.States
                     {
                         if (cinemaArray.Data.Count > 1)
                         {
-                            string replayMessage = "These are all the cinemas that I've found. Please your desired one";
+                            string replayMessage = "These are all the cinema that match your request. Please select your desired one";
                             StateReply replay = new StateReply(false, replayMessage, "herocard");
                             string heroCardTitle = "Select your cinema";
 
@@ -81,14 +81,14 @@ namespace MovieBot.States
                                 cardButtons.Add(plButton);
                             }
 
-                            replay.HeroCard = ReplyUtility.generateHeroCardStateReply(cardButtons, heroCardTitle, "please select one");
+                            replay.HeroCard = ReplyUtility.generateHeroCardStateReply(cardButtons, heroCardTitle, "Please select one");
                             return replay;
                         }
                         else
                         {
                             Cinema selectedCinema = cinemaArray.Data.First();
                             this.ChoosenCinema = selectedCinema;
-                            string replyMessage = "Yai ! I've found " + this.ChoosenCinema.Name + ". When do you want to go?";
+                            string replyMessage = "Great ! I have found " + this.ChoosenCinema.Name + ". When do you want to go?";
                             StateReply reply = ReplyUtility.generateWeekDayReply(replyMessage);
                             StateNum = 1;
                             return reply;
@@ -96,7 +96,7 @@ namespace MovieBot.States
                     }
                     else
                     {
-                        string replayMessage = "I didin't found any cinemas matches your input. Please try with another one.";
+                        string replayMessage = "I did not find any cinema that matches your input. Please try with another name.";
                         StateReply replay = new StateReply(false, replayMessage);
                         return replay;
                     }
@@ -136,9 +136,9 @@ namespace MovieBot.States
 
                 if (movieArray.Data.Count != 0)
                 {
-                    string replayMessage = "These are all the Movies that are available in "+ ChoosenCinema.Name;
+                    string replayMessage = "This is the list of all the Movies that are available in "+ ChoosenCinema.Name;
                     StateReply replay = new StateReply(false, replayMessage, "herocard");
-                    string heroCardTitle = "Here they are";
+                    string heroCardTitle = "Please select only one movie";
 
                     List<CardAction> cardButtons = new List<CardAction>();
 
@@ -155,15 +155,15 @@ namespace MovieBot.States
                         cardButtons.Add(plButton);
                     }
 
-                    replay.HeroCard = ReplyUtility.generateHeroCardStateReply(cardButtons, heroCardTitle, "please select one");
+                    replay.HeroCard = ReplyUtility.generateHeroCardStateReply(cardButtons, heroCardTitle, "Please select one");
                     StateNum = 2;
                     return replay;
                 }
                 else
                 {
-                    string replayMessage = "I didin't found any movies available for the day you selected. Please restart againg the search cinema with a new cinema";
-                    StateReply replay = new StateReply(true, replayMessage);
-                    return replay;
+                    string replyMessage = "I did not found any movies available in the day that you have selected. Please try with another day or looking for another cinema";
+                    StateReply reply = ReplyUtility.generateWeekDayReply(replyMessage);
+                    return reply;
                 }
             }
             else
@@ -177,7 +177,7 @@ namespace MovieBot.States
             if (userInput.Contains("movieselected="))
             {
                 string selectedMovieID = userInput.Replace("movieselected=", String.Empty);
-                string request = "v2/projections/list/" + ChoosenCinema.CinemaID + "/" + selectedMovieID;
+                string request = "v2/projections/list/" + selectedMovieID + "/" + ChoosenCinema.CinemaID;
                 string requestWithParameter = request + "/?StartDate=" + this.dateChoosen.ToString("yyyy-MM-dd") + "&EndDate=" + this.dateChoosen.AddDays(1).ToString("yyyy-MM-dd");
                 string urlRequest = ConnectionUtility.CreateGetRequest(requestWithParameter);
                 WebResponse response = ConnectionUtility.MakeRequest(urlRequest);
@@ -185,9 +185,9 @@ namespace MovieBot.States
 
                 if (cinemaArray.Data.Count != 0)
                 {
-                    string replayMessage = "These are all the projections that I've found. If you wanna go back in the movie selection press back button";
+                    string replayMessage = "These are all the projections that I have found. If you want to return to the movie selection select the back option";
                     StateReply replay = new StateReply(false, replayMessage, "herocard");
-                    string heroCardTitle = "These are all the projections";
+                    string heroCardTitle = "Here they are!";
 
                     List<CardAction> cardButtons = new List<CardAction>();
 
@@ -212,7 +212,7 @@ namespace MovieBot.States
                     };
                     cardButtons.Add(plButton1);
 
-                    replay.HeroCard = ReplyUtility.generateHeroCardStateReply(cardButtons, heroCardTitle, "please select one");
+                    replay.HeroCard = ReplyUtility.generateHeroCardStateReply(cardButtons, heroCardTitle, "Please select one option");
                     StateNum = 3;
                     return replay;
                 }

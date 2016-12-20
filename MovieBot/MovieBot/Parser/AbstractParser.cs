@@ -45,7 +45,12 @@ namespace MovieBot.Parser
         /// <param name="input">Message sent by the user</param>
         /// <returns>Returns True if it can handle the message or Flase on the contrary</returns>
         public abstract Boolean haveAnswer(string input);
-
+        /// <summary>
+        /// This method can be used in order to get the the parsed input sent by the user and the ManagerEnum
+        /// reference in order to know which is the ReplyManager desidered by the user.
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns>a ParserObject that contains all the information for the process of the user request</returns>
         protected ParserObject getManagerFromInput(string input)
         {
             string root = System.Web.HttpContext.Current.Server.MapPath("~");
@@ -70,11 +75,25 @@ namespace MovieBot.Parser
                     return innerReturnValue;
                 }
             }
-            ParserObject returnValue = new ParserObject
+
+            ParserObject returnValue = new ParserObject();
+
+            if (lowerInput.Contains("help"))
             {
-                ParsedInput = input,
-                ReplyManagerEnum = ManagerEnum.Default
-            };
+                returnValue = new ParserObject
+                {
+                    ParsedInput = input,
+                    ReplyManagerEnum = ManagerEnum.Help
+                };
+            }
+            else
+            {
+                returnValue = new ParserObject
+                {
+                    ParsedInput = input,
+                    ReplyManagerEnum = ManagerEnum.Default
+                };
+            }
             return returnValue;
         }
     }
