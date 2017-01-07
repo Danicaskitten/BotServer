@@ -138,9 +138,11 @@
     <Compile Include="ReplyManagers\ManagerEnum.cs" />
     <Compile Include="ReplyManagers\ReplyManager.cs" />
     <Compile Include="ReplyManagers\ReplyManagerFactory.cs" />
+    <Compile Include="ReplyManagers\SearchAllProjectionsReplyManager.cs" />
     <Compile Include="ReplyManagers\SearchCinemaReplyManager.cs" />
     <Compile Include="ReplyManagers\SearchMovieReplyManager.cs" />
-    <Compile Include="ReplyManagers\StartMessage.cs" />
+    <Compile Include="ReplyManagers\StartMessageReplyManager.cs" />
+    <Compile Include="States\SearchAllProjectionsState.cs" />
     <Compile Include="States\SearchCinemaState.cs" />
     <Compile Include="States\SearchMovieState.cs" />
     <Compile Include="States\SearchState.cs" />
