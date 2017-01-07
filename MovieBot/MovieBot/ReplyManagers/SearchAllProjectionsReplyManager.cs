@@ -1,21 +1,21 @@
 ﻿using Microsoft.Bot.Connector;
 using MovieBot.States;
-using MovieBot.Parser;
+using MovieBot.Utility;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
-using MovieBot.Utility;
 
 namespace MovieBot.ReplyManagers
 {
-    public class SearchMovieReplyManager : ReplyManager
+    public class SearchAllProjectionsReplyManager : ReplyManager
     {
-        public SearchMovieReplyManager(Activity activity, string input) : base(activity, input){}
+        public SearchAllProjectionsReplyManager(Activity activity, string input) : base(activity, input){ }
 
         public override async Task<Activity> getResponse()
         {
-            SearchMovieState state = new SearchMovieState
+            SearchAllProjectionsState state = new SearchAllProjectionsState
             {
                 ChannelType = activity.ChannelId,
                 UserID = activity.From.Id,
@@ -27,37 +27,37 @@ namespace MovieBot.ReplyManagers
             if (stateReplay != null)
             {
                 StateClient stateClient = activity.GetStateClient();
-                replyToConversation = await this.parseStateReply<SearchMovieState>(stateReplay, stateClient, state, "SearchMovie");
+                replyToConversation = await this.parseStateReply<SearchAllProjectionsState>(stateReplay, stateClient, state, "AllProjections");
             }
             else
             {
-                replyToConversation = activity.CreateReply("Something went wrong in the parsing of your last message. Please try sending again your Search Movie request");
+                replyToConversation = activity.CreateReply("Something went wrong in the parsing of your last message. Please try sending again your Search Cinema request");
             }
             return replyToConversation;
         }
 
         public override async Task<Activity> getResponseWithState<T>(T stateInput)
         {
-            if(typeof(T) == typeof(SearchMovieState))
+            if (typeof(T) == typeof(SearchAllProjectionsState))
             {
                 T temp = (T)(object)stateInput;
-                SearchMovieState state = (SearchMovieState)(object)stateInput;
+                SearchAllProjectionsState state = (SearchAllProjectionsState)(object)stateInput;
                 StateReply stateReplay = state.getReplay(input);
                 Activity replyToConversation = new Activity();
                 if (stateReplay != null)
                 {
                     StateClient stateClient = activity.GetStateClient();
-                    replyToConversation = await this.parseStateReply<SearchMovieState>(stateReplay, stateClient, state, "SearchMovie");
+                    replyToConversation = await this.parseStateReply<SearchAllProjectionsState>(stateReplay, stateClient, state, "AllProjections");
                 }
                 else
                 {
-                    replyToConversation = activity.CreateReply("Something went wrong in the parsing of your last message. Please try sending again your Search Movie request");
+                    replyToConversation = activity.CreateReply("Something went wrong in the parsing of your last message. Please try sending again your Search Cinema request");
                 }
                 return replyToConversation;
             }
             else
             {
-                Activity replyToConversation = activity.CreateReply("I'm so sorry, I didn't manage to process your request");
+                Activity replyToConversation = activity.CreateReply("I'm so sorry, I didn't manage to process your request. Please try sending again your Search Cinema request");
                 return replyToConversation;
             }
         }

@@ -58,6 +58,13 @@ namespace MovieBot.Parser
                         break;
                 }
             }
+            else
+            {
+                if (intent.Equals("AllProjections"))
+                {
+                    newUserInput = "all projections";
+                }
+            }
 
             return newUserInput;
         }

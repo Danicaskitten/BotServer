@@ -94,6 +94,10 @@ namespace MovieBot.Parser
                     SearchCinemaState state2 = botData.GetProperty<SearchCinemaState>(propertyName);
                     replyToSend = await replyManager.getResponseWithState<SearchCinemaState>(state2);
                     break;
+                case ManagerEnum.AllProjections:
+                    SearchAllProjectionsState state3 = botData.GetProperty<SearchAllProjectionsState>(propertyName);
+                    replyToSend = await replyManager.getResponseWithState<SearchAllProjectionsState>(state3);
+                    break;
                 default :
                     replyToSend = null;
                     break;    
