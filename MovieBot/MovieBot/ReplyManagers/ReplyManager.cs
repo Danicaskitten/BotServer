@@ -23,14 +23,14 @@ namespace MovieBot.ReplyManagers
         public abstract Task<Activity> getResponse();
         public abstract Task<Activity> getResponseWithState<T>(T state);
 
-        protected async Task<Activity> parseStateReply<T>(StateReply stateReplay, StateClient stateClient, T state)
+        protected async Task<Activity> parseStateReply<T>(StateReply stateReplay, StateClient stateClient, T state, String dataProperty)
         {
             if (!(stateReplay.IsFinalState))
             {
                 BotData userData = await stateClient.BotState.GetUserDataAsync(activity.ChannelId, activity.From.Id);
-                userData.SetProperty<bool>("SearchCinema", true);
+                userData.SetProperty<bool>(dataProperty, true);
 
-                userData.SetProperty<T>("SearchCinemaState", state);
+                userData.SetProperty<T>(dataProperty +"State", state);
                 BotData response = await stateClient.BotState.SetUserDataAsync(activity.ChannelId, activity.From.Id, userData);
             }
             else

@@ -28,7 +28,7 @@ namespace MovieBot.ReplyManagers
             if (stateReplay != null)
             {
                 StateClient stateClient = activity.GetStateClient();
-                replyToConversation = await this.parseStateReply<SearchCinemaState>(stateReplay, stateClient, state);
+                replyToConversation = await this.parseStateReply<SearchCinemaState>(stateReplay, stateClient, state, "SearchCinema");
             }
             else
             {
@@ -48,7 +48,7 @@ namespace MovieBot.ReplyManagers
                 if (stateReplay != null)
                 {
                     StateClient stateClient = activity.GetStateClient();
-                    replyToConversation = await this.parseStateReply<SearchCinemaState>(stateReplay, stateClient, state);
+                    replyToConversation = await this.parseStateReply<SearchCinemaState>(stateReplay, stateClient, state, "SearchCinema");
                 }
                 else
                 {

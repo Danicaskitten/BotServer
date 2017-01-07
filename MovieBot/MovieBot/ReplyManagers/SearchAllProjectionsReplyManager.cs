@@ -15,7 +15,7 @@ namespace MovieBot.ReplyManagers
 
         public override async Task<Activity> getResponse()
         {
-            SearchCinemaState state = new SearchCinemaState
+            SearchAllProjectionsState state = new SearchAllProjectionsState
             {
                 ChannelType = activity.ChannelId,
                 UserID = activity.From.Id,
@@ -27,7 +27,7 @@ namespace MovieBot.ReplyManagers
             if (stateReplay != null)
             {
                 StateClient stateClient = activity.GetStateClient();
-                replyToConversation = await this.parseStateReply<SearchCinemaState>(stateReplay, stateClient, state);
+                replyToConversation = await this.parseStateReply<SearchAllProjectionsState>(stateReplay, stateClient, state, "AllProjections");
             }
             else
             {
@@ -38,16 +38,16 @@ namespace MovieBot.ReplyManagers
 
         public override async Task<Activity> getResponseWithState<T>(T stateInput)
         {
-            if (typeof(T) == typeof(SearchCinemaState))
+            if (typeof(T) == typeof(SearchAllProjectionsState))
             {
                 T temp = (T)(object)stateInput;
-                SearchCinemaState state = (SearchCinemaState)(object)stateInput;
+                SearchAllProjectionsState state = (SearchAllProjectionsState)(object)stateInput;
                 StateReply stateReplay = state.getReplay(input);
                 Activity replyToConversation = new Activity();
                 if (stateReplay != null)
                 {
                     StateClient stateClient = activity.GetStateClient();
-                    replyToConversation = await this.parseStateReply<SearchCinemaState>(stateReplay, stateClient, state);
+                    replyToConversation = await this.parseStateReply<SearchAllProjectionsState>(stateReplay, stateClient, state, "AllProjections");
                 }
                 else
                 {
