@@ -17,13 +17,13 @@ Here is the list of the commands that I understand:
 
 3.	**All Projections or AllProjections**
 
-	I will send you all movies that are available in the cinema now and I will help you to choose your cinema and to make a reservation.
+	I will send you all the movies that are available now in the cinema and I will help you to choose your cinema and to make a reservation.
 
 4.	**Ask me for help**
 
 	I will provide you all the information that you need
 
-Now I can also reply to direct request **without using a specific command**.
+Now I can also reply to direct requests **without using a specific command**.
 Example: "I wanna see Avengers" or "I need some help" and so on...
 
 **Notes**
