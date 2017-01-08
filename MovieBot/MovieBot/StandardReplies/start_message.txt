@@ -15,11 +15,16 @@ Here is the list of the commands that I understand:
 
 	I will discover what movies are displayed in the cinema that you want and I will help you to make a reservation for the movie that you choose.
 
-3.	**Ask me for help**
+3.	**All Projections or AllProjections**
 
-	I will provide you all the information that you need 
+	I will send you all movies that are available in the cinema now and I will help you to choose your cinema and to make a reservation.
 
-I will show you the list of the commands that I understand, so that we can get on better and I can be more helpful in your experience
+4.	**Ask me for help**
+
+	I will provide you all the information that you need
+
+Now I can also reply to direct request **without using a specific command**.
+Example: "I wanna see Avengers" or "I need some help" and so on...
 
 **Notes**
 
