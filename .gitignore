@@ -248,3 +248,4 @@ MovieBot/MovieBot/Web.Release.config
 /ConsoleApplication1
 /MovieBot/MovieBot/Utility/BingMapsUtility.cs
 /MovieBot/MovieBot/Utility/LuisUtility.cs
+/MovieBot/MovieBot/Utility/SpeechRecognitionAuthentication.cs

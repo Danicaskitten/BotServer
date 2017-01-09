@@ -153,6 +153,8 @@
     <Compile Include="Parser\AbstractParser.cs" />
     <Compile Include="Utility\LuisUtility.cs" />
     <Compile Include="Utility\ReplyUtility.cs" />
+    <Compile Include="Utility\SpeechRecognitionAuthentication.cs" />
+    <Compile Include="Utility\SpeechRecognitionUtility.cs" />
     <Compile Include="Utility\StateReply.cs" />
     <Compile Include="Utility\StringToEnum.cs" />
   </ItemGroup>
