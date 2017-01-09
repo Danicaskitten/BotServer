@@ -13,7 +13,6 @@ namespace MovieBot.States
     {
         public string ChannelType { get; set; }
         public string UserID { get; set; }
-        public string ChoosenMovie { get; set; }
         public List<Cinema> cinemaList { get; set; }
         public Point locationFound { get; set; }
         public DateTime dateChoosen { get; set; }
@@ -153,7 +152,7 @@ namespace MovieBot.States
                     foreach (Movie movie in movieArray.Data)
                     {
                         string title = movie.Title;
-                        string value = "movieSelected=" + movie.ImdbID;
+                        string value = "movieSelected=" + movie.ImdbID+"&"+movie.Title;
                         CardAction plButton = new CardAction()
                         {
                             Value = value,
@@ -185,10 +184,12 @@ namespace MovieBot.States
             if (userInput.Contains("movieselected="))
             {
                 string selectedMovieID = userInput.Replace("movieselected=", String.Empty);
+                Char delimiter = '&';
+                String[] substrings = selectedMovieID.Split(delimiter);
+                this.saveMovie(substrings[0], substrings[1]);
                 NumberFormatInfo nfi = new NumberFormatInfo();
                 nfi.NumberDecimalSeparator = ".";
-                this.ChoosenMovie = selectedMovieID;
-                string request = "v2/movies/id/" + this.ChoosenMovie + "/cinemas/" + this.locationFound.Latitude.ToString(nfi) + "/" + this.locationFound.Longitude.ToString(nfi);
+                string request = "v2/movies/id/" + this.SelectedMovie.ImdbID + "/cinemas/" + this.locationFound.Latitude.ToString(nfi) + "/" + this.locationFound.Longitude.ToString(nfi);
                 string requestWithParameter = request + "/?StartDate=" + this.dateChoosen.ToString("yyyy-MM-dd") + "&EndDate=" + this.dateChoosen.AddDays(1).ToString("yyyy-MM-dd") + "&maxRange=50";
                 string urlRequest = ConnectionUtility.CreateGetRequest(requestWithParameter);
                 WebResponse response = ConnectionUtility.MakeRequest(urlRequest);
@@ -205,7 +206,7 @@ namespace MovieBot.States
                     foreach (Cinema cinema in cinemaArray.Data)
                     {
                         string title = cinema.Name;
-                        string value = "CinemaSelected=" + cinema.CinemaID;
+                        string value = "CinemaSelected=" + cinema.CinemaID+"&"+cinema.Name;
                         CardAction plButton = new CardAction()
                         {
                             Value = value,
@@ -237,7 +238,11 @@ namespace MovieBot.States
             if (userInput.Contains("cinemaselected="))
             {
                 string selectedCinemaID = userInput.Replace("cinemaselected=", String.Empty);
-                string request = "v2/projections/list/" + ChoosenMovie + "/" + selectedCinemaID;
+                Char delimiter = '&';
+                String[] substrings = selectedCinemaID.Split(delimiter);
+                this.saveCinema(substrings[0], substrings[1]);
+
+                string request = "v2/projections/list/" + this.SelectedMovie.ImdbID + "/" + this.SelectedCinema.CinemaID;
                 string requestWithParameter = request + "/?StartDate=" + this.dateChoosen.ToString("yyyy-MM-dd") + "&EndDate=" + this.dateChoosen.AddDays(1).ToString("yyyy-MM-dd");
                 string urlRequest = ConnectionUtility.CreateGetRequest(requestWithParameter);
                 WebResponse response = ConnectionUtility.MakeRequest(urlRequest);
@@ -253,8 +258,8 @@ namespace MovieBot.States
 
                     foreach (Projection proj in cinemaArray.Data)
                     {
-                        string title = "Time Slot: " + proj.Time;
-                        string value = "CinemaSelected=" + proj.CinemaID + "MovieSelected=" + proj.ImdbID + "TimeSelected=" + proj.Time + "DateSelected=" + proj.Date;
+                        string title = "Time Slot: " + proj.Time+" Free Seats: "+proj.FreeSeats;
+                        string value = "TimeSelected=" + proj.Time + "DateSelected=" + proj.Date +"ProjSelected="+proj.ProjectionID + "FreeSeats="+proj.FreeSeats;
                         CardAction plButton = new CardAction()
                         {
                             Value = value,
@@ -297,9 +302,8 @@ namespace MovieBot.States
             }
             else
             {
-                string replayMessage = "Your reservation has successfully been completed. Enjoy your Movie !!";
-                StateReply replay = new StateReply(true, replayMessage);
-                return replay;
+                this.saveProjection(userInput);
+                return this.reserveYourSeat();
             }
         }
 

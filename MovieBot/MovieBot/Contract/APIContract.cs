@@ -31,10 +31,12 @@ namespace MovieBot.Contract
 
     public class Projection
     {
+        public int ProjectionID { get; set; }
         public string ImdbID { get; set; }
         public int CinemaID { get; set; }
         public string Date { get; set; }
         public string Time { get; set; }
+        public int FreeSeats { get; set; }
     }
 
     public class ProjectionsList
