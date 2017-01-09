@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace MovieBot.States
 {
@@ -19,8 +20,7 @@ namespace MovieBot.States
 
         protected StateReply reserveYourSeat()
         {
-            string url = "https://moviebot-rage.azurewebsites.net/static/reservation/login.html?cinemaName=" + SelectedCinema.Name + "&movieName=" + SelectedMovie.Title
-            + "&date=" + SelectedProjection.Date + "&time=" + SelectedProjection.Time + "&freeSeats=" + SelectedProjection.FreeSeats;
+            string url = "https://moviebot-rage.azurewebsites.net/static/reservation/login.html?cinemaName=" + HttpUtility.UrlPathEncode(SelectedCinema.Name) + "&movieName=" + HttpUtility.UrlPathEncode(SelectedMovie.Title)+ "&date=" + HttpUtility.UrlPathEncode(SelectedProjection.Date) + "&time=" + HttpUtility.UrlPathEncode(SelectedProjection.Time) + "&freeSeats=" + SelectedProjection.FreeSeats;
             CardAction plButton = new CardAction()
             {
                 Value = url,
