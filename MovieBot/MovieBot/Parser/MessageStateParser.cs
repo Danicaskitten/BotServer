@@ -18,10 +18,12 @@ namespace MovieBot.Parser
         private ConnectorClient connector;
         private ReplyManager replyManager;
         private Activity reply;
+        private bool audioFlag;
 
-        public MessageStateParser(Activity activity, ConnectorClient connector){
+        public MessageStateParser(Activity activity, ConnectorClient connector, bool audioFlag){
             this.activity = activity;
             this.connector = connector;
+            this.audioFlag = audioFlag;
         }
 
         /// <summary>

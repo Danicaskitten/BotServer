@@ -20,16 +20,19 @@ namespace MovieBot.Parser
         protected Activity activity;
         protected ConnectorClient connector;
         protected ReplyManager replyManager;
+        protected bool audioFlag;
 
         /// <summary>
         /// This is the basic constructor for a Parser
         /// </summary>
         /// <param name="activity">User Activity</param>
         /// <param name="connector">Generated ConnectorClient</param>
-        public AbstractParser(Activity activity, ConnectorClient connector)
+        /// <param name="audioFlag">true if the User send an audio file, false otherwise</param>
+        public AbstractParser(Activity activity, ConnectorClient connector,bool audioFlag)
         {
             this.activity = activity;
             this.connector = connector;
+            this.audioFlag = audioFlag;
         }
         /// <summary>
         /// This method is used to effectively analyze the incoming message in order to produce the

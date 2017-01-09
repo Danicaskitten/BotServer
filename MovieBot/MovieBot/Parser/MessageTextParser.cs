@@ -8,8 +8,8 @@ namespace MovieBot.Parser
     public class MessageTextParser : AbstractParser
     {
         /// <inheritdoc />
-        public MessageTextParser(Activity activity, ConnectorClient connector) : base(activity, connector){}
-        
+        public MessageTextParser(Activity activity, ConnectorClient connector, bool audioFlag) : base(activity, connector, audioFlag) { }
+
         /// <inheritdoc />
         public override bool haveAnswer(string activityInput)
         {

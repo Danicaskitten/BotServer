@@ -7,11 +7,11 @@ using System.Linq;
 using System.Net;
 using System.Web;
 
-namespace MovieBot.Utility
+namespace MovieBot.Utility.Speech
 {
-    public class SpeechRecognitionUtility
+    public static class SpeechRecognitionUtility
     {
-        private string DoSpeechReco(Attachment attachment)
+        public static string DoSpeechReco(Attachment attachment)
         {
             AccessTokenInfo token;
             string headerValue;

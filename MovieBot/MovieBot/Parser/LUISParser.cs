@@ -10,7 +10,7 @@ namespace MovieBot.Parser
 {
     public class LUISParser : AbstractParser
     {
-        public LUISParser(Activity activity, ConnectorClient connector) : base(activity, connector){}
+        public LUISParser(Activity activity, ConnectorClient connector, bool audioFlag) : base(activity, connector,audioFlag){}
 
         public override async Task<Activity> computeParsing()
         {

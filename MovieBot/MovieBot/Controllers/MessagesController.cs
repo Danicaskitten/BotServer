@@ -9,6 +9,7 @@ using Microsoft.Bot.Connector;
 using Newtonsoft.Json;
 using MovieBot.ReplyManagers;
 using MovieBot.Parser;
+using MovieBot.Utility.Speech;
 
 namespace MovieBot
 {
@@ -24,27 +25,41 @@ namespace MovieBot
             ConnectorClient connector = new ConnectorClient(new Uri(activity.ServiceUrl));
             if (activity.Type == ActivityTypes.Message)
             {
-                //TODO add the LUIS parser (magari fare un bel ciclo)
-                AbstractParser parserText = new MessageTextParser(activity, connector);
-                AbstractParser parserLUIS = new LUISParser(activity, connector);
-                MessageStateParser stateParser = new MessageStateParser(activity, connector);
+                String userInput;
                 Activity reply;
-                if (parserText.haveAnswer(activity.Text.ToLower()))
+                bool audioFlag;
+
+                if (activity.Attachments.Count > 0)
+                {
+                    userInput = SpeechRecognitionUtility.DoSpeechReco(activity.Attachments.First());
+                    audioFlag = true;
+                }
+                else
+                {
+                    userInput = activity.Text.ToLower();
+                    audioFlag = false;
+                }
+
+                AbstractParser parserText = new MessageTextParser(activity, connector, audioFlag);
+                AbstractParser parserLUIS = new LUISParser(activity, connector, audioFlag);
+                MessageStateParser stateParser = new MessageStateParser(activity, connector, audioFlag);
+
+                if (parserText.haveAnswer(userInput))
                 {
                     reply = await parserText.computeParsing();
                 }
-                else if (await stateParser.haveAnswer(activity.Text.ToLower()))
+                else if (await stateParser.haveAnswer(userInput))
                 {
                     reply = stateParser.computeParsing();
                 }
-                else if (parserLUIS.haveAnswer(activity.Text.ToLower()))
+                else if (parserLUIS.haveAnswer(userInput))
                 {
                     reply = await parserLUIS.computeParsing();
                 }
                 else
                 {
                     reply = activity.CreateReply("Sorry, I did not understand your request. Please ask me for Help in order to know my functionalities");
-                } 
+                }
                 APIResponse result = await connector.Conversations.ReplyToActivityAsync(reply);
             }
             else
