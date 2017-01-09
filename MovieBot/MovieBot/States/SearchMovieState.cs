@@ -61,8 +61,8 @@ namespace MovieBot.States
                 if (movieArray.Data.Count != 0)
                 {
                     Movie selected_movie = movieArray.Data.First();
-                    this.selectedMovie = selected_movie;
-                    string replayMessage = "Perfect ! I've found that " + this.selectedMovie.Title + " is now in the cinema. Write me your city and I will provide you all the projections near you";
+                    this.SelectedMovie = selected_movie;
+                    string replayMessage = "Perfect ! I've found that " + this.SelectedMovie.Title + " is now in the cinema. Write me your city and I will provide you all the projections near you";
                     StateReply replay = new StateReply(false, replayMessage);
                     StateNum = 1;
                     return replay;
@@ -158,7 +158,7 @@ namespace MovieBot.States
                 NumberFormatInfo nfi = new NumberFormatInfo();
                 nfi.NumberDecimalSeparator = ".";
                 this.dateChoosen = DateTime.ParseExact(selectedDay, "MM/dd/yyyy", CultureInfo.InvariantCulture);
-                string request = "v2/movies/id/" + this.selectedMovie.ImdbID + "/cinemas/"+this.locationFound.Latitude.ToString(nfi)+"/"+this.locationFound.Longitude.ToString(nfi);
+                string request = "v2/movies/id/" + this.SelectedMovie.ImdbID + "/cinemas/"+this.locationFound.Latitude.ToString(nfi)+"/"+this.locationFound.Longitude.ToString(nfi);
                 string requestWithParameter = request + "/?StartDate=" + this.dateChoosen.ToString("yyyy-MM-dd") + "&EndDate=" + this.dateChoosen.AddDays(1).ToString("yyyy-MM-dd") + "&maxRange=100";
                 string urlRequest = ConnectionUtility.CreateGetRequest(requestWithParameter);
                 WebResponse response = ConnectionUtility.MakeRequest(urlRequest);
@@ -211,7 +211,7 @@ namespace MovieBot.States
                 String[] substrings = selectedCinemaID.Split(delimiter);
                 this.saveCinema(substrings[0], substrings[1]);
 
-                string request = "v2/projections/list/"+ selectedMovie.ImdbID + "/" + selectedCinema.CinemaID;
+                string request = "v2/projections/list/"+ SelectedMovie.ImdbID + "/" + SelectedCinema.CinemaID;
                 string requestWithParameter = request + "/?StartDate=" + this.dateChoosen.ToString("yyyy-MM-dd") + "&EndDate=" + this.dateChoosen.AddDays(1).ToString("yyyy-MM-dd");
                 string urlRequest = ConnectionUtility.CreateGetRequest(requestWithParameter);
                 WebResponse response = ConnectionUtility.MakeRequest(urlRequest);
@@ -227,8 +227,8 @@ namespace MovieBot.States
 
                     foreach (Projection proj in cinemaArray.Data)
                     {
-                        string title = "Time Slot: "+ proj.Time;
-                        string value = "TimeSelected=" + proj.Time + "DateSelected=" + proj.Date + "ProjSelected=" + proj.ProjectionID;
+                        string title = "Time Slot: " + proj.Time + " Free Seats: " + proj.FreeSeats;
+                        string value = "TimeSelected=" + proj.Time + "DateSelected=" + proj.Date + "ProjSelected=" + proj.ProjectionID + "FreeSeats=" + proj.FreeSeats;
                         CardAction plButton = new CardAction()
                         {
                             Value = value,
@@ -270,17 +270,8 @@ namespace MovieBot.States
             }
             else
             {
-                string selectedProj = userInput.Replace("timeselected=", String.Empty);
-                selectedProj = userInput.Replace("dateselected=", "&");
-                selectedProj = userInput.Replace("projselected=", "&");
-                Char delimiter = '&';
-                String[] substrings = selectedProj.Split(delimiter);
-                this.saveProjection(substrings[2], substrings[0], substrings[1]);
-                this.reserveYourSeat();
-
-                string replayMessage = "Your reservation has successfully been completed. Enjoy your Movie !!";
-                StateReply replay = new StateReply(true, replayMessage);
-                return replay;
+                this.saveProjection(userInput);
+                return this.reserveYourSeat();
             }
         }
 

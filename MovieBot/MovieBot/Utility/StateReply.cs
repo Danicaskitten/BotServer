@@ -12,6 +12,7 @@ namespace MovieBot.Utility
         private string _replayMessage;
         private string _special;
         private HeroCard _heroCard;
+        private CardAction _card;
 
         public StateReply(bool isFinalState, string replayMessage)
         {
@@ -38,6 +39,11 @@ namespace MovieBot.Utility
         {
             get { return _heroCard; }
             set { _heroCard = value; }
+        }
+        public CardAction Card
+        {
+            get { return _card; }
+            set { _card = value; }
         }
         public string GetSpecial
         {

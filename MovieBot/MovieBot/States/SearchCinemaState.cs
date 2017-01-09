@@ -86,8 +86,8 @@ namespace MovieBot.States
                         else
                         {
                             Cinema selectedCinema = cinemaArray.Data.First();
-                            this.selectedCinema = selectedCinema;
-                            string replyMessage = "Great ! I have found " + this.selectedCinema.Name + ". When do you want to go?";
+                            this.SelectedCinema = selectedCinema;
+                            string replyMessage = "Great ! I have found " + this.SelectedCinema.Name + ". When do you want to go?";
                             StateReply reply = ReplyUtility.generateWeekDayReply(replyMessage);
                             StateNum = 1;
                             return reply;
@@ -107,7 +107,7 @@ namespace MovieBot.States
                     {
                         if (cinema.CinemaID == Int32.Parse(result))
                         {
-                            this.selectedCinema = cinema;
+                            this.SelectedCinema = cinema;
                         }
                     }
 
@@ -127,7 +127,7 @@ namespace MovieBot.States
                 NumberFormatInfo nfi = new NumberFormatInfo();
                 this.dateChoosen = DateTime.ParseExact(selectedDay, "MM/dd/yyyy", CultureInfo.InvariantCulture);
 
-                string request = "v2/cinemas/id/" + this.selectedCinema.CinemaID + "/movies";
+                string request = "v2/cinemas/id/" + SelectedCinema.CinemaID + "/movies";
                 string requestWithParameter = request + "/?StartDate=" + this.dateChoosen.ToString("yyyy-MM-dd") + "&EndDate=" + this.dateChoosen.AddDays(1).ToString("yyyy-MM-dd");
                 string urlRequest = ConnectionUtility.CreateGetRequest(requestWithParameter);
                 WebResponse response = ConnectionUtility.MakeRequest(urlRequest);
@@ -135,7 +135,7 @@ namespace MovieBot.States
 
                 if (movieArray.Data.Count != 0)
                 {
-                    string replayMessage = "This is the list of all the Movies that are available in "+ selectedCinema.Name;
+                    string replayMessage = "This is the list of all the Movies that are available in "+ SelectedCinema.Name;
                     StateReply replay = new StateReply(false, replayMessage, "herocard");
                     string heroCardTitle = "Please select only one movie";
 
@@ -180,7 +180,7 @@ namespace MovieBot.States
                 String[] substrings = selectedMovieID.Split(delimiter);
                 this.saveMovie(substrings[0], substrings[1]);
 
-                string request = "v2/projections/list/" + selectedMovie.ImdbID + "/" + selectedCinema.CinemaID;
+                string request = "v2/projections/list/" + SelectedMovie.ImdbID + "/" + SelectedCinema.CinemaID;
                 string requestWithParameter = request + "/?StartDate=" + this.dateChoosen.ToString("yyyy-MM-dd") + "&EndDate=" + this.dateChoosen.AddDays(1).ToString("yyyy-MM-dd");
                 string urlRequest = ConnectionUtility.CreateGetRequest(requestWithParameter);
                 WebResponse response = ConnectionUtility.MakeRequest(urlRequest);
@@ -196,8 +196,8 @@ namespace MovieBot.States
 
                     foreach (Projection proj in cinemaArray.Data)
                     {
-                        string title = "Time Slot: " + proj.Time;
-                        string value = "TimeSelected=" + proj.Time + "DateSelected=" + proj.Date + "ProjSelected=" + proj.ProjectionID;
+                        string title = "Time Slot: " + proj.Time + " Free Seats: " + proj.FreeSeats;
+                        string value = "TimeSelected=" + proj.Time + "DateSelected=" + proj.Date + "ProjSelected=" + proj.ProjectionID + "FreeSeats=" + proj.FreeSeats;
                         CardAction plButton = new CardAction()
                         {
                             Value = value,
@@ -240,17 +240,8 @@ namespace MovieBot.States
             }
             else
             {
-                string selectedProj = userInput.Replace("timeselected=", String.Empty);
-                selectedProj = userInput.Replace("dateselected=", "&");
-                selectedProj = userInput.Replace("projselected=", "&");
-                Char delimiter = '&';
-                String[] substrings = selectedProj.Split(delimiter);
-                this.saveProjection(substrings[2], substrings[0], substrings[1]);
-                this.reserveYourSeat();
-
-                string replayMessage = "Your reservation has successfully been completed. Enjoy your Movie !!";
-                StateReply replay = new StateReply(true, replayMessage);
-                return replay;
+                this.saveProjection(userInput);
+                return this.reserveYourSeat();
             }
         }
 
