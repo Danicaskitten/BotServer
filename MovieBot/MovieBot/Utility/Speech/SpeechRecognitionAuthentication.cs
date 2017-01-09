@@ -8,11 +8,13 @@ using System.ComponentModel;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Net;
+using System.Threading.Tasks;
+using System.Net.Http;
 
 namespace MovieBot.Utility.Speech
 {
     [DataContract]
-    public class AccessTokenInfo
+    public class @string
     {
         [DataMember]
         public string access_token { get; set; }
@@ -26,27 +28,17 @@ namespace MovieBot.Utility.Speech
 
     public class SpeechRecognitionAuthentication
     {
-        public static readonly string AccessUri = "https://oxford-speech.cloudapp.net/token/issueToken";
-        private string clientId;
-        private string clientSecret = "e22ecd23dee64dae833dec00feefd891";
-        private string request;
-        private AccessTokenInfo token;
+        public static readonly string FetchTokenUri = "https://api.cognitive.microsoft.com/sts/v1.0";
+        private string subscriptionKey = "e22ecd23dee64dae833dec00feefd891";
+        private string token;
         private Timer accessTokenRenewer;
 
         //Access token expires every 10 minutes. Renew it every 9 minutes only.
         private const int RefreshTokenDuration = 9;
 
-        public SpeechRecognitionAuthentication(string clientId)
+        public SpeechRecognitionAuthentication(string clientID)
         {
-            this.clientId = clientId;
-
-            //If clientid or client secret has special characters, encode before sending request
-            this.request = string.Format("grant_type=client_credentials&client_id={0}&client_secret={1}&scope={2}",
-                                              HttpUtility.UrlEncode(clientId),
-                                              HttpUtility.UrlEncode(clientSecret),
-                                              HttpUtility.UrlEncode("https://speech.platform.bing.com"));
-
-            this.token = HttpPost(AccessUri, this.request);
+            this.token = FetchToken(FetchTokenUri, subscriptionKey).Result;
 
             // renew the token every specfied minutes
             accessTokenRenewer = new Timer(new TimerCallback(OnTokenExpiredCallback),
@@ -55,24 +47,17 @@ namespace MovieBot.Utility.Speech
                                            TimeSpan.FromMilliseconds(-1));
         }
 
-        //Return the access token
-        public AccessTokenInfo GetAccessToken()
+        public string GetAccessToken()
         {
             return this.token;
         }
 
-        //Renew the access token
         private void RenewAccessToken()
         {
-            AccessTokenInfo newAccessToken = HttpPost(AccessUri, this.request);
-            //swap the new token with old one
-            //Note: the swap is thread unsafe
-            this.token = newAccessToken;
-            Console.WriteLine(string.Format("Renewed token for user: {0} is: {1}",
-                              this.clientId,
-                              this.token.access_token));
+            this.token = FetchToken(FetchTokenUri, this.subscriptionKey).Result;
+            Console.WriteLine("Renewed token.");
         }
-        //Call-back when we determine the access token has expired 
+
         private void OnTokenExpiredCallback(object stateInfo)
         {
             try
@@ -91,30 +76,21 @@ namespace MovieBot.Utility.Speech
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(string.Format("Failed to reschedule timer to renew access token. Details: {0}", ex.Message));
+                    Console.WriteLine(string.Format("Failed to reschedule the timer to renew access token. Details: {0}", ex.Message));
                 }
             }
         }
 
-        //Helper function to get new access token
-        private AccessTokenInfo HttpPost(string accessUri, string requestDetails)
+        private async Task<string> FetchToken(string fetchUri, string subscriptionKey)
         {
-            //Prepare OAuth request 
-            WebRequest webRequest = WebRequest.Create(accessUri);
-            webRequest.ContentType = "application/x-www-form-urlencoded";
-            webRequest.Method = "POST";
-            byte[] bytes = Encoding.ASCII.GetBytes(requestDetails);
-            webRequest.ContentLength = bytes.Length;
-            using (Stream outputStream = webRequest.GetRequestStream())
+            using (var client = new HttpClient())
             {
-                outputStream.Write(bytes, 0, bytes.Length);
-            }
-            using (WebResponse webResponse = webRequest.GetResponse())
-            {
-                DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(AccessTokenInfo));
-                //Get deserialized object from JSON stream
-                AccessTokenInfo token = (AccessTokenInfo)serializer.ReadObject(webResponse.GetResponseStream());
-                return token;
+                client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", subscriptionKey);
+                UriBuilder uriBuilder = new UriBuilder(fetchUri);
+                uriBuilder.Path += "/issueToken";
+               
+                var result = await client.PostAsync(uriBuilder.Uri.AbsoluteUri, null);
+                return await result.Content.ReadAsStringAsync();
             }
         }
     }

@@ -13,7 +13,7 @@ namespace MovieBot.Utility.Speech
     {
         public static string DoSpeechReco(Attachment attachment)
         {
-            AccessTokenInfo token;
+            string token;
             string headerValue;
             // Note: Sign up at https://microsoft.com/cognitive to get a subscription key.  
             // Use the subscription key as Client secret below.
@@ -38,10 +38,10 @@ namespace MovieBot.Utility.Speech
             try
             {
                 token = auth.GetAccessToken();
-                Console.WriteLine("Token: {0}\n", token.access_token);
+                Console.WriteLine("Token: {0}\n", token);
 
                 //Create a header with the access_token property of the returned token
-                headerValue = "Bearer " + token.access_token;
+                headerValue = "Bearer " + token;
                 Console.WriteLine("Request Uri: " + requestUri + Environment.NewLine);
 
                 HttpWebRequest request = null;
