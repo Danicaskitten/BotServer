@@ -19,7 +19,7 @@ namespace MovieBot.States
 
         protected StateReply reserveYourSeat()
         {
-            string url = "http://moviebot-rage.azurewebsites.net/static/reservation/login.html?cinemaName=" + SelectedCinema.Name + "&movieName=" + SelectedMovie.Title
+            string url = "https://moviebot-rage.azurewebsites.net/static/reservation/login.html?cinemaName=" + SelectedCinema.Name + "&movieName=" + SelectedMovie.Title
             + "&date=" + SelectedProjection.Date + "&time=" + SelectedProjection.Time + "&freeSeats=" + SelectedProjection.FreeSeats;
             CardAction plButton = new CardAction()
             {
