@@ -10,6 +10,7 @@ using System;
 using System.Net;
 using System.Threading.Tasks;
 using System.Net.Http;
+using RestSharp;
 
 namespace MovieBot.Utility.Speech
 {
@@ -38,7 +39,7 @@ namespace MovieBot.Utility.Speech
 
         public SpeechRecognitionAuthentication(string clientID)
         {
-            this.token = FetchToken(FetchTokenUri, subscriptionKey).Result;
+            this.token = FetchToken(FetchTokenUri, subscriptionKey);
 
             // renew the token every specfied minutes
             accessTokenRenewer = new Timer(new TimerCallback(OnTokenExpiredCallback),
@@ -54,7 +55,7 @@ namespace MovieBot.Utility.Speech
 
         private void RenewAccessToken()
         {
-            this.token = FetchToken(FetchTokenUri, this.subscriptionKey).Result;
+            this.token = FetchToken(FetchTokenUri, this.subscriptionKey);
             Console.WriteLine("Renewed token.");
         }
 
@@ -81,17 +82,25 @@ namespace MovieBot.Utility.Speech
             }
         }
 
-        private async Task<string> FetchToken(string fetchUri, string subscriptionKey)
+        private string FetchToken(string fetchUri, string subscriptionKey)
         {
-            using (var client = new HttpClient())
-            {
-                client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", subscriptionKey);
-                UriBuilder uriBuilder = new UriBuilder(fetchUri);
-                uriBuilder.Path += "/issueToken";
-               
-                var result = await client.PostAsync(uriBuilder.Uri.AbsoluteUri, null);
-                return await result.Content.ReadAsStringAsync();
-            }
+            var client = new RestClient("https://api.cognitive.microsoft.com/sts/v1.0/issueToken");
+            var request = new RestRequest(Method.POST);
+            request.AddHeader("postman-token", "f9bb233a-215a-4516-861f-5d3e22c35fbc");
+            request.AddHeader("cache-control", "no-cache");
+            request.AddHeader("ocp-apim-subscription-key", "e22ecd23dee64dae833dec00feefd891");
+            IRestResponse response = client.Execute(request);
+            return response.Content;
+
+            /*            using (var client = new HttpClient())
+                        {
+                            client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", subscriptionKey);
+                            UriBuilder uriBuilder = new UriBuilder(fetchUri+ "/issueToken");
+                            HttpContent content = new StringContent("");
+
+                            var result = await client.PostAsync(uriBuilder.Uri.AbsoluteUri, content);
+                            return await result.Content.ReadAsStringAsync();
+                        }*/
         }
     }
 }

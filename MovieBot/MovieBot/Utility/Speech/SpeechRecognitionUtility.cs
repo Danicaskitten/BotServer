@@ -21,10 +21,10 @@ namespace MovieBot.Utility.Speech
             string requestUri = "https://speech.platform.bing.com/recognize";
 
             //URI Params. Refer to the Speech API documentation for more information.
-            requestUri += @"?scenarios=smd";                                // websearch is the other main option.
+            requestUri += @"?scenarios=ulm";                                // websearch is the other main option.
             requestUri += @"&appid=D4D52672-91D7-4C74-8AD8-42B1D98141A5";   // You must use this ID.
             requestUri += @"&locale=en-US";                                 // read docs, for other supported languages. 
-            requestUri += @"&device.os=wp7";
+            requestUri += @"&device.os=WindowsOS";
             requestUri += @"&version=3.0";
             requestUri += @"&format=json";
             requestUri += @"&instanceid=565D69FF-E928-4B7E-87DA-9A750B96D9E3";
