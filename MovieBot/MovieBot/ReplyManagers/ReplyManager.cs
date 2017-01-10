@@ -40,16 +40,26 @@ namespace MovieBot.ReplyManagers
 
             Activity replyToConversation = activity.CreateReply(stateReplay.GetReplayMessage);
 
-            if (stateReplay.GetSpecial == "herocard")
-            {
-                HeroCard heroGet = stateReplay.HeroCard;
-                replyToConversation.Recipient = activity.From;
-                replyToConversation.Type = "message";
-                replyToConversation.Attachments = new List<Attachment>();
+            Activity replyParsed = manageAttachment(replyToConversation, stateReplay);
 
-                Attachment plAttachment = heroGet.ToAttachment();
-                replyToConversation.Attachments.Add(plAttachment);
+            return replyToConversation;
+        }
+
+        private Activity manageAttachment(Activity replyToConversation, StateReply replyFromState)
+        {
+            string special = replyFromState.GetSpecial;
+            switch (special){
+                case "herocard":
+                    HeroCard heroGet = replyFromState.HeroCard;
+                    replyToConversation.Recipient = activity.From;
+                    replyToConversation.Type = "message";
+                    replyToConversation.Attachments = new List<Attachment>();
+
+                    Attachment plAttachment = heroGet.ToAttachment();
+                    replyToConversation.Attachments.Add(plAttachment);
+                    break;
             }
+
             return replyToConversation;
         }
     }
