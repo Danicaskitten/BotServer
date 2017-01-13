@@ -42,15 +42,15 @@ namespace MovieBot
                     userInput = activity.Text.ToLower();
                 }
 
-                if (parserText.haveAnswer(activity.Text.ToLower()))
+                if (parserText.haveAnswer(userInput))
                 {
                     reply = await parserText.computeParsing();
                 }
-                else if (await stateParser.haveAnswer(activity.Text.ToLower()))
+                else if (await stateParser.haveAnswer(userInput))
                 {
                     reply = stateParser.computeParsing();
                 }
-                else if (parserLUIS.haveAnswer(activity.Text.ToLower()))
+                else if (parserLUIS.haveAnswer(userInput))
                 {
                     reply = await parserLUIS.computeParsing();
                 }
