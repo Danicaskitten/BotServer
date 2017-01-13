@@ -23,9 +23,10 @@ namespace MovieBot
         public async Task<HttpResponseMessage> Post([FromBody]Activity activity)
         {
             ConnectorClient connector = new ConnectorClient(new Uri(activity.ServiceUrl));
+
             if (activity.Type == ActivityTypes.Message)
             {
-                //TODO add the LUIS parser (magari fare un bel ciclo)
+                //Inizializtion af all the needed Parses
                 AbstractParser parserText = new MessageTextParser(activity, connector);
                 AbstractParser parserLUIS = new LUISParser(activity, connector);
                 MessageStateParser stateParser = new MessageStateParser(activity, connector);
@@ -38,6 +39,7 @@ namespace MovieBot
                 {
                     if (activity.Attachments.Count > 0)
                     {
+                        /// Here the <see cref="MessagesController"/> can handle messages with <see cref="Attachment"/>
                         foreach (Attachment item in activity.Attachments)
                         {
                             if (item.ContentType.Contains("audio"))
@@ -66,6 +68,7 @@ namespace MovieBot
                     userInput = audioString;
                 }
 
+                //Retrieve the answer from the correct Parser
                 if (parserText.haveAnswer(userInput))
                 {
                     reply = await parserText.computeParsing();
@@ -80,6 +83,7 @@ namespace MovieBot
                 }
                 else
                 {
+                    //standard Reply if the Bot cannot handle the User request
                     reply = activity.CreateReply("Sorry, I did not understand your request. Please ask me for Help in order to know my functionalities");
                 } 
                 APIResponse result = await connector.Conversations.ReplyToActivityAsync(reply);

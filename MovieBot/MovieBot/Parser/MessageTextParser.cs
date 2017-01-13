@@ -5,10 +5,13 @@ using System.Threading.Tasks;
 
 namespace MovieBot.Parser
 {
+    /// <summary>
+    /// <see cref="AbstractParser"/> that can handle simple messages from the user
+    /// </summary>
     public class MessageTextParser : AbstractParser
     {
         /// <inheritdoc />
-        public MessageTextParser(Activity activity, ConnectorClient connector) : base(activity, connector){}
+        public MessageTextParser(Activity activity) : base(activity){}
         
         /// <inheritdoc />
         public override bool haveAnswer(string activityInput)

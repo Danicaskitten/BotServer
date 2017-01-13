@@ -7,8 +7,18 @@ using System.Web;
 
 namespace MovieBot.ReplyManagers
 {
+    /// <summary>
+    /// Factory that can generate all the available <see cref="ReplyManager"/>
+    /// </summary>
     public static class ReplyManagerFactory
     {
+        /// <summary>
+        /// This method returns the desidered <see cref="ReplyManager"/>
+        /// </summary>
+        /// <param name="activity">User <see cref="Activity"/></param>
+        /// <param name="input">User input</param>
+        /// <param name="requestedManager"><see cref="ManagerEnum"/> that contains the requested <see cref="ReplyManager"/></param>
+        /// <returns>The requested <see cref="ReplyManager"/></returns>
         public static ReplyManager genererateReplyManager(Activity activity,string input, ManagerEnum requestedManager)
         {
             switch (requestedManager)

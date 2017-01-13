@@ -5,6 +5,9 @@ using System.Web;
 
 namespace MovieBot.Contract
 {
+    /// <summary>
+    /// Object used to save Coordinates by a <see cref="MovieBot.States.SearchState"/>
+    /// </summary>
     public class Point
     {
         public double Latitude { get; set; }
@@ -12,6 +15,9 @@ namespace MovieBot.Contract
 
     }
 
+    /// <summary>
+    /// Container for a <see cref="Point"/> Object
+    /// </summary>
     public class Location
     {
         public string Name { get; set; }

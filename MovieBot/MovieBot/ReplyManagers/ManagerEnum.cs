@@ -5,6 +5,9 @@ using System.Web;
 
 namespace MovieBot.ReplyManagers
 {
+    /// <summary>
+    /// Enum that contains all the Type of <see cref="ReplyManager"/>
+    /// </summary>
     public enum ManagerEnum
     {
         SearchMovie,
