@@ -1,5 +1,4 @@
 ﻿using Microsoft.Bot.Connector;
-using NAudio.Wave;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
