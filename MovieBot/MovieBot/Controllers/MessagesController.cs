@@ -9,6 +9,7 @@ using Microsoft.Bot.Connector;
 using Newtonsoft.Json;
 using MovieBot.ReplyManagers;
 using MovieBot.Parser;
+using MovieBot.Utility.Speech;
 
 namespace MovieBot
 {
@@ -28,7 +29,19 @@ namespace MovieBot
                 AbstractParser parserText = new MessageTextParser(activity, connector);
                 AbstractParser parserLUIS = new LUISParser(activity, connector);
                 MessageStateParser stateParser = new MessageStateParser(activity, connector);
+
+                String userInput;
                 Activity reply;
+
+                if (activity.Attachments.Count > 0)
+                {
+                    userInput = SpeechRecognitionUtility.DoSpeechReco(activity.Attachments.First());
+                }
+                else
+                {
+                    userInput = activity.Text.ToLower();
+                }
+
                 if (parserText.haveAnswer(activity.Text.ToLower()))
                 {
                     reply = await parserText.computeParsing();
