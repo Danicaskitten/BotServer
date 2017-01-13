@@ -31,15 +31,39 @@ namespace MovieBot
                 MessageStateParser stateParser = new MessageStateParser(activity, connector);
 
                 String userInput;
+                string audioString= String.Empty;
                 Activity reply;
 
-                if (activity.Attachments.Count > 0)
+                if(activity.Attachments != null)
                 {
-                    userInput = SpeechRecognitionUtility.DoSpeechReco(activity.Attachments.First());
+                    if (activity.Attachments.Count > 0)
+                    {
+                        foreach (Attachment item in activity.Attachments)
+                        {
+                            if (item.ContentType.Contains("audio"))
+                            {
+                                if (item.ContentType.Contains("ogg"))
+                                {
+                                    audioString = SpeechRecognitionUtility.DoSpeechReco(activity.Attachments.First());
+                                }
+                                else
+                                {
+                                    reply = activity.CreateReply("Sorry, at the moment I can only understand audio in the .wav format. I hope my programmer will make me smarter ;)");
+                                    APIResponse audioResult = await connector.Conversations.ReplyToActivityAsync(reply);
+                                    return Request.CreateResponse(HttpStatusCode.OK);
+                                }                      
+                            }
+                        }
+                    }
+                }
+
+                if (audioString.Equals(String.Empty))
+                {
+                    userInput = activity.Text.ToLower();
                 }
                 else
                 {
-                    userInput = activity.Text.ToLower();
+                    userInput = audioString;
                 }
 
                 if (parserText.haveAnswer(userInput))
