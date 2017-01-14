@@ -8,14 +8,28 @@ using System.Web.Script.Serialization;
 
 namespace MovieBot.Utility
 {
+    /// <summary>
+    /// This class manages the connections to the backend REST APIs
+    /// </summary>
     public static class ConnectionUtility
     {
+        /// <summary>
+        /// This method generates the request URL
+        /// </summary>
+        /// <param name="queryString"></param>
+        /// <returns></returns>
         public static string CreateGetRequest(string queryString)
         {
             string UrlRequest = "https://moviebot-rage.azurewebsites.net/api/" +
             queryString;
             return (UrlRequest);
         }
+
+        /// <summary>
+        /// This method performs the request to the given API
+        /// </summary>
+        /// <param name="requestUrl"></param>
+        /// <returns></returns>
         public static WebResponse MakeRequest(string requestUrl)
         {
             try
@@ -39,6 +53,12 @@ namespace MovieBot.Utility
             }
         }
 
+        /// <summary>
+        /// This method can deserialize the reply of the backend API
+        /// </summary>
+        /// <typeparam name="T">Type of the API reply</typeparam>
+        /// <param name="response"></param>
+        /// <returns>Deserialized Reply of the desidered Type T</returns>
         public static T deserialise<T>(WebResponse response)
         {
             if (response != null)

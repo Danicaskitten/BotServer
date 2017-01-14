@@ -9,6 +9,9 @@ using System.Net;
 
 namespace MovieBot.States
 {
+    /// <summary>
+    /// <see cref="SearchState"/> designed for handling the "Search Cinema" request
+    /// </summary>
     public class SearchCinemaState : SearchState
     {
         public string ChannelType { get; set; }
@@ -19,6 +22,7 @@ namespace MovieBot.States
         public int StateNum { get; set; }
         public List<Location> locationList { get; set; }
 
+        /// <inheritdoc />
         public override StateReply getReplay(string userInput)
         {
             switch (StateNum)

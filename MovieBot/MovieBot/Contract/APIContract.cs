@@ -6,6 +6,9 @@ using System.Runtime.Serialization;
 
 namespace MovieBot.Contract
 {
+    /// <summary>
+    /// Movie Object retrieved from the BackEnd REST APIs
+    /// </summary>
     public class Movie
     {
         public string Title { get; set; }
@@ -16,6 +19,9 @@ namespace MovieBot.Contract
         public object Genre { get; set; }
     }
 
+    /// <summary>
+    /// Cinema Object retrieved from the BackEnd REST APIs
+    /// </summary>
     public class Cinema
     {
         public string Name { get; set; }
@@ -29,6 +35,9 @@ namespace MovieBot.Contract
         public string City { get; set; }
     }
 
+    /// <summary>
+    /// Projection Object retrieved from the BackEnd REST APIs
+    /// </summary>
     public class Projection
     {
         public int ProjectionID { get; set; }
@@ -39,16 +48,25 @@ namespace MovieBot.Contract
         public int FreeSeats { get; set; }
     }
 
+    /// <summary>
+    /// List of <see cref="Projection"/> retrieved from the BackEnd REST APIs
+    /// </summary>
     public class ProjectionsList
     {
         public List<Projection> Data { get; set; }
     }
 
+    /// <summary>
+    /// List of <see cref="Cinema"/> retrieved from the BackEnd REST APIs
+    /// </summary>
     public class CinemaList
     {
         public List<Cinema> Data { get; set; }
     }
 
+    /// <summary>
+    /// List of <see cref="Movie"/> retrieved from the BackEnd REST APIs
+    /// </summary>
     public class MovieList
     {
         public List<Movie> Data { get; set; }

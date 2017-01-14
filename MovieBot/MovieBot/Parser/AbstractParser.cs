@@ -17,8 +17,13 @@ namespace MovieBot.Parser
     /// </summary>
     public abstract class AbstractParser
     {
+        /// <summary>
+        /// <see cref="Activity"/> sent by the user
+        /// </summary>
         protected Activity activity;
-        protected ConnectorClient connector;
+        /// <summary>
+        /// <see cref="ReplyManager"/> used for the parsing process
+        /// </summary>
         protected ReplyManager replyManager;
 
         /// <summary>
@@ -26,11 +31,11 @@ namespace MovieBot.Parser
         /// </summary>
         /// <param name="activity">User Activity</param>
         /// <param name="connector">Generated ConnectorClient</param>
-        public AbstractParser(Activity activity, ConnectorClient connector)
+        public AbstractParser(Activity activity)
         {
             this.activity = activity;
-            this.connector = connector;
         }
+
         /// <summary>
         /// This method is used to effectively analyze the incoming message in order to produce the
         /// correct responce.It will return the activity that needs to be sent back to the user.
@@ -39,18 +44,20 @@ namespace MovieBot.Parser
         /// This method returns the activity or null if something go wrong in the parsing process
         /// </returns>
         public abstract Task<Activity> computeParsing();
+
         /// <summary>
         /// Use this mathod in order to know if this parser can process or not a specific user-input
         /// </summary>
         /// <param name="input">Message sent by the user</param>
         /// <returns>Returns True if it can handle the message or Flase on the contrary</returns>
         public abstract Boolean haveAnswer(string input);
+
         /// <summary>
-        /// This method can be used in order to get the the parsed input sent by the user and the ManagerEnum
-        /// reference in order to know which is the ReplyManager desidered by the user.
+        /// This method returns the parsed input sent by the user and the right <see cref="ManagerEnum"/>
+        /// which represents the <see cref="ReplyManager"/> desidered by the user
         /// </summary>
         /// <param name="input"></param>
-        /// <returns>a ParserObject that contains all the information for the process of the user request</returns>
+        /// <returns>a <see cref="ParserObject"/> that contains all the information useful for processing the request of the user</returns>
         protected ParserObject getManagerFromInput(string input)
         {
             string root = System.Web.HttpContext.Current.Server.MapPath("~");

@@ -6,6 +6,9 @@ using System.Web;
 
 namespace MovieBot.Utility
 {
+    /// <summary>
+    /// This class contains useful methods used by <see cref="MovieBot.States.SearchState"/>
+    /// </summary>
     public static class ReplyUtility
     {
         public static HeroCard generateHeroCardStateReply(List<CardAction> cardButtons, string heroCardTitle, string heroCardSub)
@@ -18,7 +21,13 @@ namespace MovieBot.Utility
             };
             return plCard;
         }
-
+        
+        /// <summary>
+        /// This method generates the <see cref="StateReply"/> with the <see cref="HeroCard"/> containg all the possible day that
+        /// the user can select. It takes the current day and generate all the day until the next Tuesday
+        /// </summary>
+        /// <param name="replyMessage"></param>
+        /// <returns></returns>
         public static StateReply generateWeekDayReply(string replyMessage)
         {
             StateReply reply = new StateReply(false, replyMessage, "herocard");

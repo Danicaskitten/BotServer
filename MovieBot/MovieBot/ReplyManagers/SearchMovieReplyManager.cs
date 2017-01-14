@@ -11,10 +11,13 @@ namespace MovieBot.ReplyManagers
 {
     public class SearchMovieReplyManager : ReplyManager
     {
+        /// <inheritdoc />
         public SearchMovieReplyManager(Activity activity, string input) : base(activity, input){}
 
+        /// <inheritdoc />
         public override async Task<Activity> getResponse()
         {
+            //creation of the rigth state
             SearchMovieState state = new SearchMovieState
             {
                 ChannelType = activity.ChannelId,
@@ -22,7 +25,7 @@ namespace MovieBot.ReplyManagers
                 StateNum = 0
             };
 
-            StateReply stateReplay = state.getReplay(input);
+            StateReply stateReplay = state.getReplay(userInput);
             Activity replyToConversation = new Activity();
             if (stateReplay != null)
             {
@@ -36,13 +39,14 @@ namespace MovieBot.ReplyManagers
             return replyToConversation;
         }
 
+        /// <inheritdoc />
         public override async Task<Activity> getResponseWithState<T>(T stateInput)
         {
             if(typeof(T) == typeof(SearchMovieState))
             {
                 T temp = (T)(object)stateInput;
                 SearchMovieState state = (SearchMovieState)(object)stateInput;
-                StateReply stateReplay = state.getReplay(input);
+                StateReply stateReplay = state.getReplay(userInput);
                 Activity replyToConversation = new Activity();
                 if (stateReplay != null)
                 {

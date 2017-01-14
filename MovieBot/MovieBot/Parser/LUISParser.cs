@@ -8,16 +8,22 @@ using MovieBot.ReplyManagers;
 
 namespace MovieBot.Parser
 {
+    /// <summary>
+    /// <see cref="AbstractParser"/> that can be used to manage LUIS requests
+    /// </summary>
     public class LUISParser : AbstractParser
     {
-        public LUISParser(Activity activity, ConnectorClient connector) : base(activity, connector){}
+        /// <inheritdoc />
+        public LUISParser(Activity activity) : base(activity){}
 
+        /// <inheritdoc />
         public override async Task<Activity> computeParsing()
         {
             Activity reply = await this.replyManager.getResponse();
             return reply;
         }
 
+        /// <inheritdoc />
         public override bool haveAnswer(string input)
         {
             LUISResponse response = LuisUtility.GetEntityFromLUIS(input);
@@ -36,6 +42,11 @@ namespace MovieBot.Parser
             }
         }
 
+        /// <summary>
+        /// This method is used in order to convert a <see cref="LUISResponse"/> into the correct command
+        /// </summary>
+        /// <param name="response"><see cref="LUISResponse"/> retrived from the LUIS API</param>
+        /// <returns>The command deisdered by the User</returns>
         private string computeLUISOutput(LUISResponse response)
         {
             string intent = response.topScoringIntent.intent;

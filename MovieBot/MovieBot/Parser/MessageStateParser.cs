@@ -12,16 +12,26 @@ using System.Web.Script.Serialization;
 
 namespace MovieBot.Parser
 {
+    /// <summary>
+    /// Parser that can manages statefull request from the user
+    /// </summary>
     public class MessageStateParser
     {
+        /// <summary>
+        /// <see cref="Activity"/> sent by the user
+        /// </summary>
         private Activity activity;
-        private ConnectorClient connector;
+        /// <summary>
+        /// <see cref="ReplyManager"/> used for the parsing process
+        /// </summary>
         private ReplyManager replyManager;
+        /// <summary>
+        /// <see cref="Activity"/> retrieved from the parsing process
+        /// </summary>
         private Activity reply;
 
-        public MessageStateParser(Activity activity, ConnectorClient connector){
+        public MessageStateParser(Activity activity){
             this.activity = activity;
-            this.connector = connector;
         }
 
         /// <summary>
