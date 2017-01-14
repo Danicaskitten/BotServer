@@ -18,9 +18,11 @@ namespace MovieBot.Utility.Speech
         public string scope { get; set; }
     }
 
+    /// <summary>
+    /// This class allows the sistym to request the Authentication Token to Cognitive Service of Microsoft
+    /// </summary>
     public class SpeechRecognitionAuthentication
     {
-        public static readonly string FetchTokenUri = "https://api.cognitive.microsoft.com/sts/v1.0";
         private string subscriptionKey = "e22ecd23dee64dae833dec00feefd891";
         private string token;
         private Timer accessTokenRenewer;
@@ -28,9 +30,13 @@ namespace MovieBot.Utility.Speech
         //Access token expires every 10 minutes. Renew it every 9 minutes only.
         private const int RefreshTokenDuration = 9;
 
+        /// <summary>
+        /// Contructor that generate a new Token and Inizialize a Timer that renews the token when the old one expires
+        /// </summary>
+        /// <param name="clientID"></param>
         public SpeechRecognitionAuthentication(string clientID)
         {
-            this.token = FetchToken(FetchTokenUri, subscriptionKey);
+            this.token = FetchToken(subscriptionKey);
 
             // renew the token every specfied minutes
             accessTokenRenewer = new Timer(new TimerCallback(OnTokenExpiredCallback),
@@ -38,7 +44,7 @@ namespace MovieBot.Utility.Speech
                                            TimeSpan.FromMinutes(RefreshTokenDuration),
                                            TimeSpan.FromMilliseconds(-1));
         }
-
+        
         public string GetAccessToken()
         {
             return this.token;
@@ -46,10 +52,14 @@ namespace MovieBot.Utility.Speech
 
         private void RenewAccessToken()
         {
-            this.token = FetchToken(FetchTokenUri, this.subscriptionKey);
+            this.token = FetchToken(this.subscriptionKey);
             Console.WriteLine("Renewed token.");
         }
 
+        /// <summary>
+        /// Callback function for renewing the token
+        /// </summary>
+        /// <param name="stateInfo"></param>
         private void OnTokenExpiredCallback(object stateInfo)
         {
             try
@@ -73,7 +83,12 @@ namespace MovieBot.Utility.Speech
             }
         }
 
-        private string FetchToken(string fetchUri, string subscriptionKey)
+        /// <summary>
+        /// This method actually sends the request to the Authorization URL
+        /// </summary>
+        /// <param name="fetchUri"></param>
+        /// <returns></returns>
+        private string FetchToken(string subscriptionKey)
         {
             var client = new RestClient("https://api.cognitive.microsoft.com/sts/v1.0/issueToken");
             var request = new RestRequest(Method.POST);
@@ -82,16 +97,6 @@ namespace MovieBot.Utility.Speech
             request.AddHeader("ocp-apim-subscription-key", "e22ecd23dee64dae833dec00feefd891");
             IRestResponse response = client.Execute(request);
             return response.Content;
-
-            /*            using (var client = new HttpClient())
-                        {
-                            client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", subscriptionKey);
-                            UriBuilder uriBuilder = new UriBuilder(fetchUri+ "/issueToken");
-                            HttpContent content = new StringContent("");
-
-                            var result = await client.PostAsync(uriBuilder.Uri.AbsoluteUri, content);
-                            return await result.Content.ReadAsStringAsync();
-                        }*/
         }
     }
 }

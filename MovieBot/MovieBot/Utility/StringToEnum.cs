@@ -6,6 +6,9 @@ using System.Web;
 
 namespace MovieBot.Utility
 {
+    /// <summary>
+    /// This class contain useful method used by <see cref="ReplyManager"/>
+    /// </summary>
     public static class StringToEnum
     {   
         public static ManagerEnum convertToEnum (string stringToConvert)

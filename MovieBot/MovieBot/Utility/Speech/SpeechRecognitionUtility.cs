@@ -9,8 +9,16 @@ using System.Web;
 
 namespace MovieBot.Utility.Speech
 {
+    /// <summary>
+    /// This class manages the request to the Microsoft Cognitive Service API
+    /// </summary>
     public static class SpeechRecognitionUtility
     {
+        /// <summary>
+        /// This static method processes the given audio attachment, sends it to the Bing Speech API and returns the converted text
+        /// </summary>
+        /// <param name="attachment"></param>
+        /// <returns></returns>
         public static string DoSpeechReco(Attachment attachment)
         {
             string token;
