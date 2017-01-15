@@ -250,9 +250,10 @@ namespace MovieBot.States
                 string requestWithParameter = request + "/?StartDate=" + this.dateChoosen.ToString("yyyy-MM-dd") + "&EndDate=" + this.dateChoosen.AddDays(1).ToString("yyyy-MM-dd");
                 string urlRequest = ConnectionUtility.CreateGetRequest(requestWithParameter);
                 WebResponse response = ConnectionUtility.MakeRequest(urlRequest);
-                ProjectionsList cinemaArray = ConnectionUtility.deserialise<ProjectionsList>(response);
+                ProjectionsList projectionList = ConnectionUtility.deserialise<ProjectionsList>(response);
+                this.sentProjections = projectionList.Data;
 
-                if (cinemaArray.Data.Count != 0)
+                if (projectionList.Data.Count != 0)
                 {
                     string replayMessage = "These are all the projections that I have found. If you want to return in the cinema selection select the back option";
                     StateReply replay = new StateReply(false, replayMessage, "herocard");
@@ -260,10 +261,11 @@ namespace MovieBot.States
 
                     List<CardAction> cardButtons = new List<CardAction>();
 
-                    foreach (Projection proj in cinemaArray.Data)
+                    for (int index = 0; index < projectionList.Data.Count; index++)
                     {
-                        string title = "Time Slot: " + proj.Time+" Free Seats: "+proj.FreeSeats;
-                        string value = "TimeSelected=" + proj.Time + "DateSelected=" + proj.Date +"ProjSelected="+proj.ProjectionID + "FreeSeats="+proj.FreeSeats;
+                        Projection proj = this.sentProjections[index];
+                        string title = "Time Slot: " + proj.Time + " Free Seats: " + proj.FreeSeats;
+                        string value = "selected Projection: " + index;
                         CardAction plButton = new CardAction()
                         {
                             Value = value,

@@ -28,6 +28,10 @@ namespace MovieBot.States
         /// <see cref="Projection"/> selected by the User
         /// </summary>
         public Projection SelectedProjection { get; set; }
+        /// <summary>
+        /// List of <see cref="Projection"/> sent to the User
+        /// </summary>
+        public List<Projection> sentProjections { get; set; }
         
         /// <summary>
         /// This method manages the UserInput and returns the rigth <see cref="StateReply"/>
@@ -42,7 +46,7 @@ namespace MovieBot.States
         /// <returns></returns>
         protected StateReply reserveYourSeat()
         {
-            string url = "https://moviebot-rage.azurewebsites.net/static/reservation/login.html?cinemaName=" + HttpUtility.UrlPathEncode(SelectedCinema.Name) + "&movieName=" + HttpUtility.UrlPathEncode(SelectedMovie.Title)+ "&date=" + HttpUtility.UrlPathEncode(SelectedProjection.Date) + "&time=" + HttpUtility.UrlPathEncode(SelectedProjection.Time) + "&freeSeats=" + SelectedProjection.FreeSeats;
+            string url = "https://moviebot-rage.azurewebsites.net/static/reservation/login.html?projID=" + SelectedProjection.ProjectionID;
             CardAction plButton = new CardAction()
             {
                 Value = url,
@@ -94,20 +98,8 @@ namespace MovieBot.States
         /// <param name="userInput"></param>
         protected void saveProjection(string userInput)
         {
-            string selectedProj = userInput.Replace("timeselected=", String.Empty);
-            selectedProj = selectedProj.Replace("dateselected=", "&");
-            selectedProj = selectedProj.Replace("projselected=", "&");
-            selectedProj = selectedProj.Replace("freeseats=", "&");
-            Char delimiter = '&';
-            String[] substrings = selectedProj.Split(delimiter);
-            Projection newProj = new Projection
-            {
-                ProjectionID = Convert.ToInt32(substrings[2]),
-                Date = substrings[1],
-                FreeSeats = Convert.ToInt32(substrings[3]),
-                Time =substrings[0]
-            };
-            this.SelectedProjection = newProj;
+            string selectedProj = userInput.Replace("selected Projection: ", String.Empty);
+            this.SelectedProjection = this.sentProjections[Convert.ToInt32(selectedProj)];
         }
     }
 }
