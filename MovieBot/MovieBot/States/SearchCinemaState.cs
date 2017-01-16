@@ -193,37 +193,9 @@ namespace MovieBot.States
 
                 if (projectionList.Data.Count != 0)
                 {
-                    string replayMessage = "These are all the projections that I have found. If you want to return to the movie selection select the back option";
-                    StateReply replay = new StateReply(false, replayMessage, "herocard");
-                    string heroCardTitle = "Here they are!";
-
-                    List<CardAction> cardButtons = new List<CardAction>();
-
-                    for(int index = 0; index < projectionList.Data.Count; index++)
-                    {
-                        Projection proj = this.sentProjections[index];
-                        string title = "Time Slot: " + proj.Time + " Free Seats: " + proj.FreeSeats;
-                        string value = "selected Projection: " + index;
-                        CardAction plButton = new CardAction()
-                        {
-                            Value = value,
-                            Type = "imBack",
-                            Title = title
-                        };
-                        cardButtons.Add(plButton);
-                    }
-
-                    CardAction plButton1 = new CardAction()
-                    {
-                        Value = "Back",
-                        Type = "imBack",
-                        Title = "Back"
-                    };
-                    cardButtons.Add(plButton1);
-
-                    replay.HeroCard = ReplyUtility.generateHeroCardStateReply(cardButtons, heroCardTitle, "Please select one option");
+                    StateReply reply = this.generateStateReplyForProjections(projectionList.Data);
                     StateNum = 3;
-                    return replay;
+                    return reply;
                 }
                 else
                 {

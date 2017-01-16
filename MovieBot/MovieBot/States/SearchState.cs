@@ -98,8 +98,47 @@ namespace MovieBot.States
         /// <param name="userInput"></param>
         protected void saveProjection(string userInput)
         {
-            string selectedProj = userInput.Replace("selected Projection: ", String.Empty);
+            string selectedProj = userInput.Replace("selected projection number: ", String.Empty);
             this.SelectedProjection = this.sentProjections[Convert.ToInt32(selectedProj)];
+        }
+
+        /// <summary>
+        /// This method receive as parameter the list of <see cref="Projection"/> and return the corresponding <see cref="StateReply"/>
+        /// </summary>
+        /// <param name="projectionList"></param>
+        /// <returns></returns>
+        protected StateReply generateStateReplyForProjections(List<Projection> projectionList)
+        {
+            string replayMessage = "These are all the projections that I have found. If you want to return in the cinema selection select the back option";
+            StateReply reply = new StateReply(false, replayMessage, "herocard");
+            string heroCardTitle = "Here they are!";
+
+            List<CardAction> cardButtons = new List<CardAction>();
+
+            for (int index = 0; index < projectionList.Count; index++)
+            {
+                Projection proj = projectionList[index];
+                string title = "Time Slot: " + proj.Time + " Free Seats: " + proj.FreeSeats;
+                string value = "Selected Projection Number: " + index;
+                CardAction plButton = new CardAction()
+                {
+                    Value = value,
+                    Type = "imBack",
+                    Title = title
+                };
+                cardButtons.Add(plButton);
+            }
+
+            CardAction plButton1 = new CardAction()
+            {
+                Value = "Back",
+                Type = "imBack",
+                Title = "Back"
+            };
+            cardButtons.Add(plButton1);
+
+            reply.HeroCard = ReplyUtility.generateHeroCardStateReply(cardButtons, heroCardTitle, "Please select your favorite one");
+            return reply;
         }
     }
 }
