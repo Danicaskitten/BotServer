@@ -27,9 +27,9 @@ namespace MovieBot
             if (activity.Type == ActivityTypes.Message)
             {
                 //Inizializtion af all the needed Parses
-                AbstractParser parserText = new MessageTextParser(activity, connector);
-                AbstractParser parserLUIS = new LUISParser(activity, connector);
-                MessageStateParser stateParser = new MessageStateParser(activity, connector);
+                AbstractParser parserText = new MessageTextParser(activity);
+                AbstractParser parserLUIS = new LUISParser(activity);
+                MessageStateParser stateParser = new MessageStateParser(activity);
 
                 String userInput;
                 string audioString= String.Empty;

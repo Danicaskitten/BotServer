@@ -250,40 +250,14 @@ namespace MovieBot.States
                 string requestWithParameter = request + "/?StartDate=" + this.dateChoosen.ToString("yyyy-MM-dd") + "&EndDate=" + this.dateChoosen.AddDays(1).ToString("yyyy-MM-dd");
                 string urlRequest = ConnectionUtility.CreateGetRequest(requestWithParameter);
                 WebResponse response = ConnectionUtility.MakeRequest(urlRequest);
-                ProjectionsList cinemaArray = ConnectionUtility.deserialise<ProjectionsList>(response);
+                ProjectionsList projectionList = ConnectionUtility.deserialise<ProjectionsList>(response);
+                this.sentProjections = projectionList.Data;
 
-                if (cinemaArray.Data.Count != 0)
+                if (projectionList.Data.Count != 0)
                 {
-                    string replayMessage = "These are all the projections that I have found. If you want to return in the cinema selection select the back option";
-                    StateReply replay = new StateReply(false, replayMessage, "herocard");
-                    string heroCardTitle = "Here they are!";
-
-                    List<CardAction> cardButtons = new List<CardAction>();
-
-                    foreach (Projection proj in cinemaArray.Data)
-                    {
-                        string title = "Time Slot: " + proj.Time+" Free Seats: "+proj.FreeSeats;
-                        string value = "TimeSelected=" + proj.Time + "DateSelected=" + proj.Date +"ProjSelected="+proj.ProjectionID + "FreeSeats="+proj.FreeSeats;
-                        CardAction plButton = new CardAction()
-                        {
-                            Value = value,
-                            Type = "imBack",
-                            Title = title
-                        };
-                        cardButtons.Add(plButton);
-                    }
-
-                    CardAction plButton1 = new CardAction()
-                    {
-                        Value = "Back",
-                        Type = "imBack",
-                        Title = "Back"
-                    };
-                    cardButtons.Add(plButton1);
-
-                    replay.HeroCard = ReplyUtility.generateHeroCardStateReply(cardButtons, heroCardTitle, "Please select your favorite one");
+                    StateReply reply = this.generateStateReplyForProjections(projectionList.Data);
                     StateNum = 4;
-                    return replay;
+                    return reply;
                 }
                 else
                 {
