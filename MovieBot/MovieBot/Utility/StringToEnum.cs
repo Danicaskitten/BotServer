@@ -21,6 +21,8 @@ namespace MovieBot.Utility
                     return ManagerEnum.SearchCinema;
                 case ("AllProjections"):
                     return ManagerEnum.AllProjections;
+                case ("Start"):
+                    return ManagerEnum.Start;
                 default:
                     return ManagerEnum.Default;
             }
