@@ -131,7 +131,7 @@ namespace MovieBot.States
 
             CardAction plButton1 = new CardAction()
             {
-                Value = "Back",
+                Value = "GoBack",
                 Type = "imBack",
                 Title = "Back"
             };
