@@ -14,6 +14,7 @@ namespace MovieBot.ReplyManagers
         SearchCinema,
         AllProjections,
         Help,
+        Start,
         Default
     }
 }
