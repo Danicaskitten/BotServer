@@ -56,10 +56,11 @@ namespace MovieBot.ReplyManagers
         /// <returns>The <see cref="Activity"/> to send back to the User</returns>
         protected async Task<Activity> parseStateReply<T>(StateReply stateReplay, StateClient stateClient, T state, String dataProperty)
         {
-            //If the State is Final then is deleted from the client and the property is updated
+            //The client is updated with the new state
             if (!(stateReplay.IsFinalState))
             {
                 BotData userData = await stateClient.BotState.GetUserDataAsync(activity.ChannelId, activity.From.Id);
+                this.removeUnfinishedStates(userData);
                 userData.SetProperty<bool>(dataProperty, true);
 
                 userData.SetProperty<T>(dataProperty +"State", state);
@@ -67,7 +68,7 @@ namespace MovieBot.ReplyManagers
             }
             else
             {
-                //The client is updated with the new state
+                //If the State is Final then is deleted from the client and the property is updated
                 await stateClient.BotState.DeleteStateForUserAsync(activity.ChannelId, activity.From.Id);
             }
 
@@ -100,6 +101,17 @@ namespace MovieBot.ReplyManagers
             }
 
             return replyToConversation;
+        }
+
+        /// <summary>
+        /// This method removes frome the remote <see cref="BotData"/> all the states that are unfinished
+        /// </summary>
+        /// <param name="userData"></param>
+        protected void removeUnfinishedStates(BotData userData)
+        {
+            userData.SetProperty<bool>("AllProjections", false);
+            userData.SetProperty<bool>("SearchCinema", false);
+            userData.SetProperty<bool>("SearchMovie", false);
         }
     }
 }
