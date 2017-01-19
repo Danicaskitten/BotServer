@@ -269,7 +269,7 @@ namespace MovieBot.States
                 }
                 else
                 {
-                    StateReply replay = this.stateTwo("selectedDay=" + dateChoosen.ToString("MM/dd/yyyy"));
+                    StateReply replay = this.stateTwo("selectedday=" + dateChoosen.ToString("MM/dd/yyyy"));
                     return replay;
                 }
             }
@@ -277,7 +277,7 @@ namespace MovieBot.States
             {
                 if (userInput.Equals("goback"))
                 {
-                    StateReply replay = this.stateTwo("movieSelected=" + SelectedMovie.ImdbID + "&" + SelectedMovie.Title);
+                    StateReply replay = this.stateOne("selectedday=" + dateChoosen.ToString("MM/dd/yyyy"));
                     return replay;
                 }
                 else
@@ -291,7 +291,7 @@ namespace MovieBot.States
         {
             if (userInput.Equals("goback"))
             {
-                StateReply replay = this.stateThree("cinemaselected=" + SelectedCinema.CinemaID+"&"+SelectedCinema.Name);
+                StateReply replay = this.stateTwo("movieselected=" + SelectedMovie.ImdbID + "&" + SelectedMovie.Title);
                 return replay;
             }
             else
