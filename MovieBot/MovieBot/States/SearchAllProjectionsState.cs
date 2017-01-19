@@ -220,6 +220,14 @@ namespace MovieBot.States
                         cardButtons.Add(plButton);
                     }
 
+                    CardAction button = new CardAction()
+                    {
+                        Value = "goBack",
+                        Type = "imBack",
+                        Title = "Back"
+                    };
+                    cardButtons.Add(button);
+
                     replay.HeroCard = ReplyUtility.generateHeroCardStateReply(cardButtons, heroCardTitle, "Please select one option");
                     StateNum = 3;
                     return replay;
@@ -261,21 +269,29 @@ namespace MovieBot.States
                 }
                 else
                 {
-                    StateReply replay = this.stateTwo("selectedDay=" + dateChoosen.ToString("MM/dd/yyyy"));
+                    StateReply replay = this.stateTwo("selectedday=" + dateChoosen.ToString("MM/dd/yyyy"));
                     return replay;
                 }
             }
             else
             {
-                return null;
+                if (userInput.Equals("goback"))
+                {
+                    StateReply replay = this.stateOne("selectedday=" + dateChoosen.ToString("MM/dd/yyyy"));
+                    return replay;
+                }
+                else
+                {
+                    return null;
+                }
             }
         }
 
         private StateReply stateFour(string userInput)
         {
-            if (userInput.Equals("back"))
+            if (userInput.Equals("goback"))
             {
-                StateReply replay = this.stateTwo("selectedday=" + dateChoosen.ToString("MM/dd/yyyy"));
+                StateReply replay = this.stateTwo("movieselected=" + SelectedMovie.ImdbID + "&" + SelectedMovie.Title);
                 return replay;
             }
             else

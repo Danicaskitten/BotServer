@@ -211,7 +211,7 @@ namespace MovieBot.States
 
         private StateReply stateThree(string userInput)
         {
-            if (userInput.Equals("back"))
+            if (userInput.Equals("goback"))
             {
                 StateReply replay = this.stateOne("selectedday=" + dateChoosen.ToString("MM/dd/yyyy"));
                 return replay;
