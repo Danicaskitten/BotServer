@@ -116,14 +116,14 @@ namespace MovieBot
                 // Handle conversation state changes, like members being added and removed
                 // Use Activity.MembersAdded and Activity.MembersRemoved and Activity.Action for info
                 // Not available in all channels
-                ReplyManager manager = new StartMessageReplyManager(activity, activity.Text.ToLower());
+                ReplyManager manager = new StartMessageReplyManager(activity, "");
                 reply = await manager.getResponse();
             }
             else if (activity.Type == ActivityTypes.ContactRelationUpdate)
             {
                 // Handle add/remove from contact lists
                 // Activity.From + Activity.Action represent what happened
-                ReplyManager manager = new StartMessageReplyManager(activity, activity.Text.ToLower());
+                ReplyManager manager = new StartMessageReplyManager(activity, "");
                 reply = await manager.getResponse();
             }
             else if (activity.Type == ActivityTypes.Typing)
@@ -132,7 +132,7 @@ namespace MovieBot
             }
             else if (activity.Type == ActivityTypes.Ping)
             {
-                ReplyManager manager = new StartMessageReplyManager(activity, activity.Text.ToLower());
+                ReplyManager manager = new StartMessageReplyManager(activity, "");
                 reply = await manager.getResponse();
             }
 
