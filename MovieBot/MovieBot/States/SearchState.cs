@@ -17,6 +17,14 @@ namespace MovieBot.States
     public abstract class SearchState
     {
         /// <summary>
+        /// Channel used by the user, this property can be used in order to differentiate the replies based on the channelType 
+        /// </summary>
+        public string ChannelType { get; set; }
+        /// <summary>
+        /// User ID in the channel 
+        /// </summary>
+        public string UserID { get; set; }
+        /// <summary>
         /// <see cref="Movie"/> selected by the User
         /// </summary>
         public Movie SelectedMovie { get; set; }

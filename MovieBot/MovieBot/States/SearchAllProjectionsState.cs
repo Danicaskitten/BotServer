@@ -14,8 +14,6 @@ namespace MovieBot.States
     /// </summary>
     public class SearchAllProjectionsState : SearchState
     {
-        public string ChannelType { get; set; }
-        public string UserID { get; set; }
         public List<Cinema> cinemaList { get; set; }
         public Point locationFound { get; set; }
         public DateTime dateChoosen { get; set; }

@@ -15,8 +15,6 @@ namespace MovieBot.States
     /// </summary>
     public class SearchMovieState : SearchState
     {
-        public string ChannelType { get; set; }
-        public string UserID { get; set; }
         public Point locationFound { get; set; }
         public DateTime dateChoosen { get; set; }
         public int StateNum { get; set; }
