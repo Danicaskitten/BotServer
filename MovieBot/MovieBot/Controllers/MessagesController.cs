@@ -116,7 +116,6 @@ namespace MovieBot
                 // Handle conversation state changes, like members being added and removed
                 // Use Activity.MembersAdded and Activity.MembersRemoved and Activity.Action for info
                 // Not available in all channels
-                ConnectorClient connector = new ConnectorClient(new Uri(activity.ServiceUrl));
                 ReplyManager manager = new StartMessageReplyManager(activity, activity.Text.ToLower());
                 reply = await manager.getResponse();
             }
@@ -124,7 +123,6 @@ namespace MovieBot
             {
                 // Handle add/remove from contact lists
                 // Activity.From + Activity.Action represent what happened
-                ConnectorClient connector = new ConnectorClient(new Uri(activity.ServiceUrl));
                 ReplyManager manager = new StartMessageReplyManager(activity, activity.Text.ToLower());
                 reply = await manager.getResponse();
             }
@@ -134,7 +132,6 @@ namespace MovieBot
             }
             else if (activity.Type == ActivityTypes.Ping)
             {
-                ConnectorClient connector = new ConnectorClient(new Uri(activity.ServiceUrl));
                 ReplyManager manager = new StartMessageReplyManager(activity, activity.Text.ToLower());
                 reply = await manager.getResponse();
             }
