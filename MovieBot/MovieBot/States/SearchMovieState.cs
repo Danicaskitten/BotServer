@@ -187,8 +187,7 @@ namespace MovieBot.States
                 ProjectionsList projectionList = ConnectionUtility.deserialise<ProjectionsList>(response);
                 this.sentProjections = projectionList.Data;
 
-                if (projectionList.Data.Count != 0)
-                {
+                if (projectionList.Data.Count != 0) {
                     StateReply reply = this.generateStateReplyForProjections(projectionList.Data);
                     StateNum = 4;
                     return reply;
