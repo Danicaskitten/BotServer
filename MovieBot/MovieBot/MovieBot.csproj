@@ -155,6 +155,7 @@
     <Compile Include="States\SearchMovieState.cs" />
     <Compile Include="States\SearchState.cs" />
     <Compile Include="Utility\BingMapsUtility.cs" />
+    <Compile Include="Utility\ValueEnum.cs" />
     <Compile Include="Utility\ConnectionUtility.cs" />
     <Compile Include="Utility\LuisUtility.cs" />
     <Compile Include="Utility\ReplyUtility.cs" />

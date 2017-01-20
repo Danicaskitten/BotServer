@@ -80,9 +80,10 @@ namespace MovieBot.States
 
         private StateReply stateOne(string userInput)
         {
-            if (userInput.Contains("selectedlocation="))
+            string toBeReplace = ReplyUtility.generateValueReplyForHeroCard(ValueEnum.Location, true);
+            if (userInput.Contains(toBeReplace))
             {
-                string result = userInput.Replace("selectedlocation=", String.Empty);
+                string result = userInput.Replace(toBeReplace, String.Empty);
                 foreach (Location item in locationList)
                 {
                     if (item.Name.ToLower() == result)
@@ -126,27 +127,9 @@ namespace MovieBot.States
                     else
                     {
                         this.locationList = resultList;
-                        string replayMessage = "These are all the cities that match your request";
-                        StateReply replay = new StateReply(false, replayMessage, "herocard");
-                        string heroCardTitle = "Please select your city";
-
-                        List<CardAction> cardButtons = new List<CardAction>();
-
-                        foreach (Location item in locationList)
-                        {
-                            string title = item.Name;
-                            string value = "selectedLocation=" + item.Name;
-                            CardAction plButton = new CardAction()
-                            {
-                                Value = value,
-                                Type = "imBack",
-                                Title = title
-                            };
-                            cardButtons.Add(plButton);
-                        }
-
-                        replay.HeroCard = ReplyUtility.generateHeroCardStateReply(cardButtons, heroCardTitle, "please select one");
-                        return replay;
+                        string replyMessage = "These are all the cities that match your request";
+                        StateReply reply = this.generateStateReplyForLocation(locationList, replyMessage);
+                        return reply;
                     }
                 }
             }
@@ -154,9 +137,10 @@ namespace MovieBot.States
 
         private StateReply stateTwo(string userInput)
         {
-            if (userInput.Contains("selectedday="))
+            string toBeReplace = ReplyUtility.generateValueReplyForHeroCard(ValueEnum.Day, true);
+            if (userInput.Contains(toBeReplace))
             {
-                string selectedDay = userInput.Replace("selectedday=", String.Empty);
+                string selectedDay = userInput.Replace(toBeReplace, String.Empty);
                 NumberFormatInfo nfi = new NumberFormatInfo();
                 nfi.NumberDecimalSeparator = ".";
                 this.dateChoosen = DateTime.ParseExact(selectedDay, "MM/dd/yyyy", CultureInfo.InvariantCulture);
@@ -168,28 +152,10 @@ namespace MovieBot.States
 
                 if (cinemaArray.Data.Count != 0)
                 {
-                    string replayMessage = "This is the list of cinema where your movie is available. Please select your favorite one";
-                    StateReply replay = new StateReply(false, replayMessage, "herocard");
-                    string heroCardTitle = "Here they are!";
-
-                    List<CardAction> cardButtons = new List<CardAction>();
-
-                    foreach (Cinema cinema in cinemaArray.Data)
-                    {
-                        string title = cinema.Name;
-                        string value = "CinemaSelected=" + cinema.CinemaID + "&" + cinema.Name;
-                        CardAction plButton = new CardAction()
-                        {
-                            Value = value,
-                            Type = "imBack",
-                            Title = title
-                        };
-                        cardButtons.Add(plButton);
-                    }
-
-                    replay.HeroCard = ReplyUtility.generateHeroCardStateReply(cardButtons, heroCardTitle, "Please select one option");
+                    string replyMessage = "This is the list of cinema where your movie is available. Please select your favorite one";
+                    StateReply reply = this.generateStateReplyForCinema(cinemaArray.Data, replyMessage);
                     StateNum = 3;
-                    return replay;
+                    return reply;
                 }
                 else
                 {
@@ -206,9 +172,10 @@ namespace MovieBot.States
 
         private StateReply stateThree(string userInput)
         {
-            if (userInput.Contains("cinemaselected="))
+            string toBeReplaced = ReplyUtility.generateValueReplyForHeroCard(ValueEnum.Cinema, true);
+            if (userInput.Contains(toBeReplaced))
             {
-                string selectedCinemaID = userInput.Replace("cinemaselected=", String.Empty);
+                string selectedCinemaID = userInput.Replace(toBeReplaced, String.Empty);
                 Char delimiter = '&';
                 String[] substrings = selectedCinemaID.Split(delimiter);
                 this.saveCinema(substrings[0], substrings[1]);
@@ -228,7 +195,7 @@ namespace MovieBot.States
                 }
                 else
                 {
-                    StateReply replay = this.stateTwo("selectedDay=" + dateChoosen.ToString("MM/dd/yyyy"));
+                    StateReply replay = this.stateTwo(ReplyUtility.generateValueReplyForHeroCard(ValueEnum.Day, true) + dateChoosen.ToString("MM/dd/yyyy"));
                     return replay;
                 }
             }
@@ -241,7 +208,7 @@ namespace MovieBot.States
         {
             if (userInput.Equals("goback"))
             {
-                StateReply replay = this.stateTwo("selectedday=" + dateChoosen.ToString("MM/dd/yyyy"));
+                StateReply replay = this.stateTwo(ReplyUtility.generateValueReplyForHeroCard(ValueEnum.Day, true) + dateChoosen.ToString("MM/dd/yyyy"));
                 return replay;
             }
             else

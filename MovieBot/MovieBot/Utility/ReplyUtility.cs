@@ -40,7 +40,7 @@ namespace MovieBot.Utility
             {
                 DateTime day = today.AddDays(i);
                 string title = day.DayOfWeek.ToString() + " " +day.ToString("MM/dd/yyyy") ;
-                string value = "selectedDay="+day.ToString("MM/dd/yyyy");
+                string value = generateValueReplyForHeroCard(ValueEnum.Day,false)+day.ToString("MM/dd/yyyy");
                 CardAction plButton = new CardAction()
                 {
                     Value = value,
@@ -51,6 +51,43 @@ namespace MovieBot.Utility
             }
             reply.HeroCard = ReplyUtility.generateHeroCardStateReply(cardButtons, heroCardTitle, "Please select one option");
             return reply;
+        }
+
+        /// <summary>
+        /// This Method returns the right Value field to be added in the heroCard
+        /// </summary>
+        /// <param name="valueType"></param>
+        /// <param name="toSubstitue">True if the return value will be using in the parsing, false otherwise</param>
+        /// <returns></returns>
+        public static string generateValueReplyForHeroCard(ValueEnum valueType, bool toSubstitue)
+        {
+            string valueToReturn="";
+            switch (valueType)
+            {
+                case ValueEnum.Day:
+                    valueToReturn = "You selected: ";
+                    break;
+                case ValueEnum.Cinema:
+                    valueToReturn = "Cinema selected: ";
+                    break;
+                case ValueEnum.Movie:
+                    valueToReturn = "Movie selected: ";
+                    break;
+                case ValueEnum.Location:
+                    valueToReturn = "City selected: ";
+                    break;
+                case ValueEnum.Projections:
+                    valueToReturn = "You selected the projection number: ";
+                    break;
+            }
+            if (toSubstitue)
+            {
+                return valueToReturn.ToLower();
+            }
+            else
+            {
+                return valueToReturn;
+            }
         }
     }
 }

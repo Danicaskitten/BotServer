@@ -40,7 +40,7 @@ namespace MovieBot.States
         /// List of <see cref="Projection"/> sent to the User
         /// </summary>
         public List<Projection> sentProjections { get; set; }
-        
+
         /// <summary>
         /// This method manages the UserInput and returns the rigth <see cref="StateReply"/>
         /// </summary>
@@ -71,26 +71,24 @@ namespace MovieBot.States
         }
 
         /// <summary>
-        /// This method create e save the Movie with a given Id and Title
+        /// This method create e save the Movie with a given Title
         /// </summary>
-        /// <param name="id"></param>
         /// <param name="title"></param>
-        protected void saveMovie(string id, string title)
+        protected void saveMovie(string title, string id)
         {
             Movie newMovie = new Movie
             {
-                ImdbID = id,
+                ImdbID = Convert.ToInt32(id),
                 Title = title
             };
             this.SelectedMovie = newMovie;
         }
 
         /// <summary>
-        /// This method create e save the Cinema with a given Id and Name
+        /// This method create e save the Cinema with a given and Name
         /// </summary>
-        /// <param name="id"></param>
         /// <param name="name"></param>
-        protected void saveCinema(string id, string name)
+        protected void saveCinema(string name, string id)
         {
             Cinema newCinema = new Cinema
             {
@@ -106,7 +104,8 @@ namespace MovieBot.States
         /// <param name="userInput"></param>
         protected void saveProjection(string userInput)
         {
-            string selectedProj = userInput.Replace("selected projection number: ", String.Empty);
+            string toBeReplaced = ReplyUtility.generateValueReplyForHeroCard(ValueEnum.Projections, true);
+            string selectedProj = userInput.Replace(toBeReplaced, String.Empty);
             this.SelectedProjection = this.sentProjections[Convert.ToInt32(selectedProj)];
         }
 
@@ -127,7 +126,7 @@ namespace MovieBot.States
             {
                 Projection proj = projectionList[index];
                 string title = "Time Slot: " + proj.Time + " Free Seats: " + proj.FreeSeats;
-                string value = "Selected Projection Number: " + index;
+                string value = ReplyUtility.generateValueReplyForHeroCard(ValueEnum.Projections, false) + index;
                 CardAction plButton = new CardAction()
                 {
                     Value = value,
@@ -146,6 +145,96 @@ namespace MovieBot.States
             cardButtons.Add(plButton1);
 
             reply.HeroCard = ReplyUtility.generateHeroCardStateReply(cardButtons, heroCardTitle, "Please select your favorite one");
+            return reply;
+        }
+
+        /// <summary>
+        /// This method receive as parameter the list of <see cref="Movie"/> and return the corresponding <see cref="StateReply"/>
+        /// </summary>
+        /// <param name="movieList"></param>
+        /// <param name="messageReply"></param>
+        /// <returns></returns>
+        protected StateReply generateStateReplyForMovies(List<Movie> movieList, string messageReply)
+        {
+            StateReply reply = new StateReply(false, messageReply, "herocard");
+            string heroCardTitle = "Please select only one movie";
+
+            List<CardAction> cardButtons = new List<CardAction>();
+
+            foreach (Movie movie in movieList)
+            {
+                string title = movie.Title;
+                string value = ReplyUtility.generateValueReplyForHeroCard(ValueEnum.Movie, false) + movie.Title +"&" + movie.ImdbID;
+                CardAction plButton = new CardAction()
+                {
+                    Value = value,
+                    Type = "imBack",
+                    Title = title
+                };
+                cardButtons.Add(plButton);
+            }
+
+            reply.HeroCard = ReplyUtility.generateHeroCardStateReply(cardButtons, heroCardTitle, "Please select one");
+            return reply;
+        }
+
+        /// <summary>
+        /// This method receive as parameter the list of <see cref="Location"/> and return the corresponding <see cref="StateReply"/>
+        /// </summary>
+        /// <param name="locationList"></param>
+        /// <param name="messageReply"></param>
+        /// <returns></returns>
+        protected StateReply generateStateReplyForLocation(List<Location> locationList, string messageReply)
+        {
+            StateReply reply = new StateReply(false, messageReply, "herocard");
+            string heroCardTitle = "Please select your city";
+
+            List<CardAction> cardButtons = new List<CardAction>();
+
+            foreach (Location item in locationList)
+            {
+                string title = item.Name;
+                string value = ReplyUtility.generateValueReplyForHeroCard(ValueEnum.Location, false) + item.Name;
+                CardAction plButton = new CardAction()
+                {
+                    Value = value,
+                    Type = "imBack",
+                    Title = title
+                };
+                cardButtons.Add(plButton);
+            }
+
+            reply.HeroCard = ReplyUtility.generateHeroCardStateReply(cardButtons, heroCardTitle, "please select one");
+            return reply;
+        }
+
+        /// <summary>
+        /// This method receive as parameter the list of <see cref="Cinema"/> and return the corresponding <see cref="StateReply"/>
+        /// </summary>
+        /// <param name="cinemaList"></param>
+        /// <param name="messageReply"></param>
+        /// <returns></returns>
+        protected StateReply generateStateReplyForCinema(List<Cinema> cinemaList, string messageReply)
+        {
+            StateReply reply = new StateReply(false, messageReply, "herocard");
+            string heroCardTitle = "Here they are!";
+
+            List<CardAction> cardButtons = new List<CardAction>();
+
+            foreach (Cinema cinema in cinemaList)
+            {
+                string title = cinema.Name;
+                string value = ReplyUtility.generateValueReplyForHeroCard(ValueEnum.Cinema,false) + cinema.Name +"&" + cinema.CinemaID;
+                CardAction plButton = new CardAction()
+                {
+                    Value = value,
+                    Type = "imBack",
+                    Title = title
+                };
+                cardButtons.Add(plButton);
+            }
+
+            reply.HeroCard = ReplyUtility.generateHeroCardStateReply(cardButtons, heroCardTitle, "Please select one option");
             return reply;
         }
     }
