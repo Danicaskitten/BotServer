@@ -1,0 +1,5 @@
+﻿1.	SearchMovie [title] - I will find your desidered Movie and I will help you to book projections
+2.	SearchCinema [name] - I will find your preferred Cinema and I will help you to book projections
+3.	All Projections - I will help you to find a cinema near to your location and to book projections
+Now I can also reply to direct requests without using a specific command.
+Example: "I wanna see Avengers" or "I need some help" and so on...

@@ -1,0 +1,3 @@
+﻿Hello fellow moviegoer!
+I am MobieBot and I can help you to find a specific movie or cinema and to make a reservation in zero time.
+I order to know my functionalties please ask me for help ;)
