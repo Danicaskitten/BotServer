@@ -104,7 +104,7 @@ namespace MovieBot
         /// <returns></returns>
         private async Task<Activity> HandleSystemMessage(Activity activity)
         {
-            Activity reply = new Activity();
+            Activity reply = activity.CreateReply("Hi!");
 
             if (activity.Type == ActivityTypes.DeleteUserData)
             {
@@ -134,6 +134,9 @@ namespace MovieBot
             }
             else if (activity.Type == ActivityTypes.Ping)
             {
+                ConnectorClient connector = new ConnectorClient(new Uri(activity.ServiceUrl));
+                ReplyManager manager = new StartMessageReplyManager(activity, activity.Text.ToLower());
+                reply = await manager.getResponse();
             }
 
             return reply;

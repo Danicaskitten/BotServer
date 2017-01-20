@@ -13,19 +13,22 @@ namespace MovieBot.ReplyManagers
         /// <inheritdoc />
         public override async Task<Activity> getResponse()
         {
-            string start_message = "";
+            string start_message = "Hi!";
             string channelType = activity.ChannelId;
-            if (channelType.Equals("facebook"))
+            if(channelType != null)
             {
-                //Here the method retrieves the reply from the File
-                string root = System.Web.HttpContext.Current.Server.MapPath("~");
-                start_message = System.IO.File.ReadAllText($"{root}{Path.DirectorySeparatorChar}StandardReplies{Path.DirectorySeparatorChar}facebook_start_message.txt");
-            }
-            else
-            {
-                //Here the method retrieves the reply from the File
-                string root = System.Web.HttpContext.Current.Server.MapPath("~");
-                start_message = System.IO.File.ReadAllText($"{root}{Path.DirectorySeparatorChar}StandardReplies{Path.DirectorySeparatorChar}start_message.txt");
+                if (channelType.Equals("facebook"))
+                {
+                    //Here the method retrieves the reply from the File
+                    string root = System.Web.HttpContext.Current.Server.MapPath("~");
+                    start_message = System.IO.File.ReadAllText($"{root}{Path.DirectorySeparatorChar}StandardReplies{Path.DirectorySeparatorChar}facebook_start_message.txt");
+                }
+                else
+                {
+                    //Here the method retrieves the reply from the File
+                    string root = System.Web.HttpContext.Current.Server.MapPath("~");
+                    start_message = System.IO.File.ReadAllText($"{root}{Path.DirectorySeparatorChar}StandardReplies{Path.DirectorySeparatorChar}start_message.txt");
+                }
             }
             Activity reply = activity.CreateReply(start_message);
             //Necessary to make the method async
