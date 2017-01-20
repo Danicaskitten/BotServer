@@ -152,10 +152,12 @@ namespace MovieBot.States
             string toBeReplaced = ReplyUtility.generateValueReplyForHeroCard(ValueEnum.Movie, true);
             if (userInput.Contains(toBeReplaced))
             {
-                string selectedMovie = userInput.Replace(toBeReplaced, String.Empty);
+                string selectedMovieInitial = userInput.Replace(toBeReplaced, String.Empty);
+                string selectedMovie = selectedMovieInitial.Replace(",id=", "&");
                 Char delimiter = '&';
                 String[] substrings = selectedMovie.Split(delimiter);
                 this.saveMovie(substrings[0], substrings[1]);
+
                 NumberFormatInfo nfi = new NumberFormatInfo();
                 nfi.NumberDecimalSeparator = ".";
                 string request = "v2/movies/id/" + this.SelectedMovie.ImdbID + "/cinemas/" + this.locationFound.Latitude.ToString(nfi) + "/" + this.locationFound.Longitude.ToString(nfi);
@@ -201,9 +203,10 @@ namespace MovieBot.States
             string toBeReplaced = ReplyUtility.generateValueReplyForHeroCard(ValueEnum.Cinema, true);
             if (userInput.Contains(toBeReplaced))
             {
-                string selectedCinemaID = userInput.Replace(toBeReplaced, String.Empty);
+                string selectedCinemaInitial = userInput.Replace(toBeReplaced, String.Empty);
+                string selectedCinema = selectedCinemaInitial.Replace(",id=", "&");
                 Char delimiter = '&';
-                String[] substrings = selectedCinemaID.Split(delimiter);
+                String[] substrings = selectedCinema.Split(delimiter);
                 this.saveCinema(substrings[0], substrings[1]);
 
                 string request = "v2/projections/list/" + this.SelectedMovie.ImdbID + "/" + this.SelectedCinema.CinemaID;
@@ -229,7 +232,7 @@ namespace MovieBot.States
             {
                 if (userInput.Equals("goback"))
                 {
-                    StateReply replay = this.stateOne("selectedday=" + dateChoosen.ToString("MM/dd/yyyy"));
+                    StateReply replay = this.stateOne(ReplyUtility.generateValueReplyForHeroCard(ValueEnum.Day,true) + dateChoosen.ToString("MM/dd/yyyy"));
                     return replay;
                 }
                 else
@@ -243,7 +246,7 @@ namespace MovieBot.States
         {
             if (userInput.Equals("goback"))
             {
-                StateReply replay = this.stateTwo(ReplyUtility.generateValueReplyForHeroCard(ValueEnum.Movie, true) + SelectedMovie.ImdbID + "&" + SelectedMovie.Title);
+                StateReply replay = this.stateTwo(ReplyUtility.generateValueReplyForHeroCard(ValueEnum.Movie, true) + SelectedMovie.Title + ",id=" + SelectedMovie.ImdbID);
                 return replay;
             }
             else

@@ -175,9 +175,10 @@ namespace MovieBot.States
             string toBeReplaced = ReplyUtility.generateValueReplyForHeroCard(ValueEnum.Cinema, true);
             if (userInput.Contains(toBeReplaced))
             {
-                string selectedCinemaID = userInput.Replace(toBeReplaced, String.Empty);
+                string selectedCinemaInitial = userInput.Replace(toBeReplaced, String.Empty);
+                string selectedCinema = selectedCinemaInitial.Replace(",id=", "&");
                 Char delimiter = '&';
-                String[] substrings = selectedCinemaID.Split(delimiter);
+                String[] substrings = selectedCinema.Split(delimiter);
                 this.saveCinema(substrings[0], substrings[1]);
 
                 string request = "v2/projections/list/"+ SelectedMovie.ImdbID + "/" + SelectedCinema.CinemaID;

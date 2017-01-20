@@ -71,23 +71,25 @@ namespace MovieBot.States
         }
 
         /// <summary>
-        /// This method create e save the Movie with a given Title
+        /// This method create e save the Movie with a given Title and id
         /// </summary>
         /// <param name="title"></param>
+        /// <param name="id"></param>
         protected void saveMovie(string title, string id)
         {
             Movie newMovie = new Movie
             {
-                ImdbID = Convert.ToInt32(id),
+                ImdbID = id,
                 Title = title
             };
             this.SelectedMovie = newMovie;
         }
 
         /// <summary>
-        /// This method create e save the Cinema with a given and Name
+        /// This method create e save the Cinema with a given and Name and id
         /// </summary>
         /// <param name="name"></param>
+        /// <param name="id"></param>
         protected void saveCinema(string name, string id)
         {
             Cinema newCinema = new Cinema
@@ -164,7 +166,7 @@ namespace MovieBot.States
             foreach (Movie movie in movieList)
             {
                 string title = movie.Title;
-                string value = ReplyUtility.generateValueReplyForHeroCard(ValueEnum.Movie, false) + movie.Title +"&" + movie.ImdbID;
+                string value = ReplyUtility.generateValueReplyForHeroCard(ValueEnum.Movie, false) + movie.Title +",ID=" + movie.ImdbID;
                 CardAction plButton = new CardAction()
                 {
                     Value = value,
@@ -224,7 +226,7 @@ namespace MovieBot.States
             foreach (Cinema cinema in cinemaList)
             {
                 string title = cinema.Name;
-                string value = ReplyUtility.generateValueReplyForHeroCard(ValueEnum.Cinema,false) + cinema.Name +"&" + cinema.CinemaID;
+                string value = ReplyUtility.generateValueReplyForHeroCard(ValueEnum.Cinema,false) + cinema.Name + ",ID=" + cinema.CinemaID;
                 CardAction plButton = new CardAction()
                 {
                     Value = value,

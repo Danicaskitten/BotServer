@@ -163,7 +163,8 @@ namespace MovieBot.States
             string toBeReplaced = ReplyUtility.generateValueReplyForHeroCard(ValueEnum.Movie, true);
             if (userInput.Contains(toBeReplaced))
             {
-                string selectedMovie = userInput.Replace(toBeReplaced, String.Empty);
+                string selectedMovieInitial = userInput.Replace(toBeReplaced, String.Empty);
+                string selectedMovie = selectedMovieInitial.Replace(",id=", "&");
                 Char delimiter = '&';
                 String[] substrings = selectedMovie.Split(delimiter);
                 this.saveMovie(substrings[0], substrings[1]);
